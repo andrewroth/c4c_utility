@@ -1,0 +1,9 @@
+This is a holding spot for any install scripts and config files for the web applications developed by and for Campus Crusade for Christ (CCC), International, and Power to Change Ministries (The Canadian branch of CCC).
+
+I hope to be able to use what's in this repository to build a system with:
+
+- the Canadian Project Application Tool (PAT)
+- the Ministry Partner Development Tool (MPDTool)
+- the Campus Movement Tracker (CMT)
+
+I'm investigating various ways of installing these tools to a fresh server.
