@@ -21,3 +21,15 @@ set :deploy_to, "/var/www/c4c_utility.campusforchrist.org"
 deploy.task :restart do
   # noop
 end
+
+def link_shared(p, o = {})
+  if o[:overwrite]
+    run "rm -Rf #{release_path}/#{p}"
+  end
+
+  run "ln -s #{shared_path}/#{p} #{release_path}/#{p}"
+end
+
+deploy.task :after_symlink do
+  link_shared 'config/database.yml'
+end
