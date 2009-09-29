@@ -17,3 +17,7 @@ role :db,  "pat.powertochange.org", :primary => true
 
 set :user, 'deploy'
 set :deploy_to, "/var/www/c4c_utility.campusforchrist.org"
+
+deploy.task :restart do
+  # noop
+end
