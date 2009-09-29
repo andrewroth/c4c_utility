@@ -31,11 +31,12 @@ def execute_sql(command)
   end
 
   puts "SQL: #{command}"
-  #@sql.execute command
+  @sql.execute command
 end
 
 def execute_shell(command)
   puts "SHELL: #{command}"
+  system command
 end
 
 namespace "p2c" do
