@@ -52,6 +52,9 @@ namespace "p2c" do
     
     # intranet
     execute_sql "USE ciministry; delete from site_session;"
+
+    # rotate logs
+    execute_shell "logrotate -vf /etc/logrotate.d/railsapps"
   end
 
   namespace "clone" do
