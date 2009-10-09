@@ -35,10 +35,12 @@ deploy.task :after_symlink do
   link_shared 'config/database.yml'
 end
 
+set :rails_env, "development"
+
 # Rake helper task.
 def run_remote_rake(rake_cmd)
   rake = fetch(:rake, "rake")
-  rails_env = fetch(:rake, "production")
+  rails_env = fetch(:rails_env, "production")
   run "cd #{current_path} && #{rake} RAILS_ENV=#{rails_env} #{rake_cmd.split(',').join(' ')}"
 end
 
