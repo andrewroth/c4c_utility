@@ -8,9 +8,10 @@
 def clone(params)
   prod = params[:prod]
   dev = params[:dev]
+  file = params[:file]
 
   throw "need a :prod database" unless prod.present?
-  throw "need a :dev database" unless dev.present?
+  throw "need a :dev database" unless dev.present? || file.present?
 
   # grab password if haven't already
   if !@password.present? && File.exists?(pwdfile = Rails.root.join("config/dbpw"))
@@ -21,7 +22,7 @@ def clone(params)
   end
 
   options = "--extended-insert --skip-lock-tables --skip-add-locks  --skip-set-charset --skip-disable-keys"
-  if params[:file]
+  if file
     dest = "> #{Rails.root.join("tmp/#{prod}.sql")}"
   else
     dest = "| mysql -h web-db.powertochange.local -u ciministry --password=#{@password} #{dev}"

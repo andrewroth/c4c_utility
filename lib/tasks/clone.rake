@@ -25,21 +25,22 @@ namespace "p2c" do
   end
   namespace "dump" do
     desc "dumps prod pat"
-    task "pat_dev" => :environment do
-      clone :prod => 'spt_dev', :file => true
-    end
     task "pat" => :environment do
       clone :prod => 'summerprojecttool', :file => true
     end
-    desc "dumps emu database to emu"
+    desc "dumps dev pat"
+    task "pat_dev" => :environment do
+      clone :prod => 'spt_dev', :file => true
+    end
+    desc "dumps pulse database"
     task "pulse" => :environment do
       clone :prod => 'emu', :file => true
     end
-    desc "dumps emu database to emu"
+    desc "dumps emu database"
     task "emu" => :environment do
       clone :prod => 'emu_dev', :file => true
     end
-    desc "dumps pulse database to moose"
+    desc "dumps moose database"
     task "moose" => :environment do
       clone :prod => 'emu_stage', :file => true
     end
@@ -52,7 +53,7 @@ namespace "p2c" do
       clone :prod => 'dev_campusforchrist', :file => true
     end
     desc "dumps all c4c intranet dbs to file"
-    task "all" => [ "pat_dev", "pat", "pulse", "emu", "moose", "intranet", "intarnet_dev" ] do
+    task "all" => [ "pat", "dev_pat", "pulse", "emu", "moose", "intranet", "intarnet_dev" ] do
     end
   end
 end

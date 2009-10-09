@@ -47,6 +47,7 @@ end
 
 namespace :deploy do
   namespace :p2c do
+    # NOTE making a loop to define these doesn't work in capistrano
     namespace :klone do
       desc "runs p2c:clone:emu remotely"
       task :emu do
@@ -60,13 +61,47 @@ namespace :deploy do
       task :moose do
         run_remote_rake "p2c:clone:moose"
       end
-      desc "runs p2c:clone:dev_pat remotely"
+      desc "runs p2c:clone:pat_dev remotely"
       task :pat_dev do
         run_remote_rake "p2c:clone:pat_dev"
       end
       desc "runs p2c:clone:all remotely"
       task :all do
         run_remote_rake "p2c:clone:all"
+      end
+    end
+    namespace :dump do
+      desc "runs p2c:dump:pat remotely"
+      task :pat do
+        run_remote_rake "p2c:dump:pat"
+      end
+      desc "runs p2c:dump:pat_dev remotely"
+      task :pat_dev do
+        run_remote_rake "p2c:dump:pat_dev"
+      end
+      desc "runs p2c:dump:emu remotely"
+      task :emu do
+        run_remote_rake "p2c:dump:emu"
+      end
+      desc "runs p2c:dump:moose remotely"
+      task :moose do
+        run_remote_rake "p2c:dump:moose"
+      end
+      desc "runs p2c:dump:pulse remotely"
+      task :pulse do
+        run_remote_rake "p2c:dump:pulse"
+      end
+      desc "runs p2c:dump:intranet remotely"
+      task :intranet do
+        run_remote_rake "p2c:dump:intranet"
+      end
+      desc "runs p2c:dump:intranet_dev remotely"
+      task :intranet_dev do
+        run_remote_rake "p2c:dump:intranet_dev"
+      end
+      desc "runs p2c:dump:all remotely"
+      task :all do
+        run_remote_rake "p2c:dump:all"
       end
     end
   end
