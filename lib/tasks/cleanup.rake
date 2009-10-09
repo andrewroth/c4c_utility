@@ -1,7 +1,7 @@
 require "#{File.dirname(__FILE__)}/../rake_helper.rb"
 
 def clear_sessions(domain)
-  execute_shell "cd /var/www/#{domain}/current && RAILS_ENV=production rake tmp:cache:clear"
+  execute_shell "cd /var/www/#{domain}/current && RAILS_ENV=production rake db:sessions:clear"
 end
 
 namespace "p2c" do
