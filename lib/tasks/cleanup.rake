@@ -1,23 +1,24 @@
 require "#{File.dirname(__FILE__)}/../rake_helper.rb"
 
-def clear_sessions(domain)
-  execute_shell "cd /var/www/#{domain}/current && RAILS_ENV=production rake db:sessions:clear"
+def clear_sessions(db, table = "sessions")
+  execute_sql "USE #{db}; DELETE FROM #{table};"
+  #execute_shell "cd /var/www/#{domain}/current && RAILS_ENV=production rake db:sessions:clear"
 end
 
 namespace "p2c" do
   desc "cleans up all c4c app data; removes all session data"
   task "cleanup" => :environment do
-    # clean up sessions stuff
-    clear_sessions "pat.powertochange.org"
-    clear_sessions "dev.pat.powertochange.org"
-    clear_sessions "pulse.campusforchrist.org"
-    clear_sessions "moose.campusforchrist.org"
-    clear_sessions "emu.campusforchrist.org"
-    
+    # pat
+    clear_sessions "summerprojecttool"
+    clear_sessions "spt_dev"
+    # emu
+    clear_sessions "emu"
+    clear_sessions "emu_dev"
+    clear_sessions "emu_stage"
     # intranet
-    execute_sql "USE ciministry; delete from site_session;"
-    execute_sql "USE dev_campusforchrist; delete from site_session;"
-
+    clear_sessions "ciministry", "site_session"
+    clear_sessions "dev_campusforchrist", "site_session"
+    
     # rotate logs
     execute_shell "logrotate -f /etc/logrotate.d/railsapps"
   end
