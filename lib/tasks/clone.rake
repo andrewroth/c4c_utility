@@ -36,13 +36,22 @@ def execute_shell(command)
   system command
 end
 
+def clear_sessions(domain)
+  execute_shell "cd /var/www/#{domain}/current && RAILS_ENV=production rake tmp:cache:clear"
+end
+
 namespace "p2c" do
   desc "cleans up all c4c app data; removes all session data"
-  task "cleanup" do
+  task "cleanup" => :environment do
     # clean up sessions stuff
-    execute_shell "cd /var/www/pat.powertochange.org/current && RAILS_ENV=production rake tmp:cache:clear"
-    execute_shell "cd /var/www/pulse.powertochange.org/current && RAILS_ENV=production rake tmp:cache:clear"
-    # execute_sql "USE ciministry; delete from site_session;"
+    clear_sessions "pat.powertochange.org"
+    clear_sessions "dev.pat.powertochange.org"
+    clear_sessions "pulse.campusforchrist.org"
+    clear_sessions "moose.campusforchrist.org"
+    clear_sessions "emu.campusforchrist.org"
+    
+    # intranet
+    execute_sql "USE ciministry; delete from site_session;"
   end
 
   namespace "clone" do
