@@ -34,3 +34,37 @@ end
 deploy.task :after_symlink do
   link_shared 'config/database.yml'
 end
+
+# Rake helper task.
+def run_remote_rake(rake_cmd)
+  rake = fetch(:rake, "rake")
+  rails_env = fetch(:rake, "production")
+  run "cd #{current_path} && #{rake} RAILS_ENV=#{rails_env} #{rake_cmd.split(',').join(' ')}"
+end
+
+namespace :deploy do
+  namespace :p2c do
+    namespace :klone do
+      desc "runs p2c:clone:emu remotely"
+      task :emu do
+        run_remote_rake "p2c:clone:emu"
+      end
+      desc "runs p2c:clone:ciministry remotely"
+      task :ciministry do
+        run_remote_rake "p2c:clone:ciministry"
+      end
+      desc "runs p2c:clone:moose remotely"
+      task :moose do
+        run_remote_rake "p2c:clone:moose"
+      end
+      desc "runs p2c:clone:dev_pat remotely"
+      task :dev_pat do
+        run_remote_rake "p2c:clone:dev_pat"
+      end
+      desc "runs p2c:clone:all remotely"
+      task :all do
+        run_remote_rake "p2c:clone:all"
+      end
+    end
+  end
+end
