@@ -1,6 +1,7 @@
 set :application, "c4c_utility"
 set :repository,  "git://github.com/andrewroth/c4c_utility.git"
 set :scm, "git"
+set :keep_releases, 3
 
 # If you aren't deploying to /u/apps/#{application} on the target
 # servers (which is the default), you can specify the actual location
