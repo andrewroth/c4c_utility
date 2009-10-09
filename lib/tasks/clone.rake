@@ -12,9 +12,6 @@ def clone(params)
   throw "need a :prod database" unless prod.present?
   throw "need a :dev database" unless dev.present?
 
-  execute_sql "drop database #{dev}"
-  execute_sql "create database #{dev}"
-
   # grab password if haven't already
   unless @password.present?
     STDOUT.print "database password: "
