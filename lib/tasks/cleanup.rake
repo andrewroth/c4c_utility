@@ -1,6 +1,7 @@
 require "#{File.dirname(__FILE__)}/../rake_helper.rb"
 
 def clear_sessions(db, table = "sessions")
+  puts "clearing sessions in #{db}.#{table}"
   execute_sql "USE #{db}; DELETE FROM #{table};"
   #execute_shell "cd /var/www/#{domain}/current && RAILS_ENV=production rake db:sessions:clear"
 end

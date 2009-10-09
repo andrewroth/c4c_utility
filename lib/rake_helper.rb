@@ -51,6 +51,5 @@ end
 
 def execute_shell(command)
   puts "SHELL: #{command}"
-  STDIN.gets
   system command
 end
