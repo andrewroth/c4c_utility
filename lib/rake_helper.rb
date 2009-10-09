@@ -21,7 +21,12 @@ def clone(params)
   end
 
   options = "--extended-insert --skip-lock-tables --skip-add-locks  --skip-set-charset --skip-disable-keys"
-  execute_shell "mysqldump #{options} -h web-db.powertochange.local -u ciministry --password=#{@password} #{prod} | sed \"2 s/.*/SET SESSION sql_mode='NO_AUTO_VALUE_ON_ZERO';/\" | mysql -h web-db.powertochange.local -u ciministry --password=#{@password} #{dev}"
+  if params[:file]
+    dest = "> #{Rails.root.join("tmp/#{prod}.sql")}"
+  else
+    dest = "| mysql -h web-db.powertochange.local -u ciministry --password=#{@password} #{dev}"
+  end
+  execute_shell "mysqldump #{options} -h web-db.powertochange.local -u ciministry --password=#{@password} #{prod} | sed \"2 s/.*/SET SESSION sql_mode='NO_AUTO_VALUE_ON_ZERO';/\" #{dest}"
 end
 
 def execute_sql(command)
@@ -38,5 +43,6 @@ end
 
 def execute_shell(command)
   puts "SHELL: #{command}"
+  STDIN.gets
   system command
 end
