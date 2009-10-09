@@ -61,8 +61,8 @@ namespace :deploy do
         run_remote_rake "p2c:clone:moose"
       end
       desc "runs p2c:clone:dev_pat remotely"
-      task :dev_pat do
-        run_remote_rake "p2c:clone:dev_pat"
+      task :pat_dev do
+        run_remote_rake "p2c:clone:pat_dev"
       end
       desc "runs p2c:clone:all remotely"
       task :all do

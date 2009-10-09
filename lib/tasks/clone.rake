@@ -3,7 +3,7 @@ require "#{File.dirname(__FILE__)}/../rake_helper.rb"
 namespace "p2c" do
   namespace "clone" do
     desc "clones pat production to development"
-    task "dev.pat" => :environment do
+    task "pat_dev" => :environment do
       clone :prod => 'summerprojecttool', :dev => 'spt_dev'
     end
     desc "clones pulse database to emu"
@@ -19,7 +19,7 @@ namespace "p2c" do
       clone :prod => 'ciministry', :dev => 'dev_campusforchrist'
     end
     desc "clones all c4c apps production sites to development"
-    task "all" => [ "dev.pat", "emu", "moose", "dev.intranet" ] do
+    task "all" => [ "pat_dev", "emu", "moose", "dev.intranet" ] do
     end
   end
 end
