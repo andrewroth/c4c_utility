@@ -45,7 +45,11 @@ def run_remote_rake(rake_cmd)
   run "cd #{current_path} && #{rake} RAILS_ENV=#{rails_env} #{rake_cmd.split(',').join(' ')}"
 end
 
-def pull(task, prod_db, local_db)
+def pull_db(task, prod_db, local_db)
+  run_remote_rake "p2c:dump:#{task}"
+  remote_dump_path = "#{current_path}/tmp/#{prod_db}.sql"
+  download remote_dump_path
+  load_dump remote_dump_path, local_db
 end
 
 namespace :deploy do
@@ -107,34 +111,34 @@ namespace :deploy do
         run_remote_rake "p2c:dump:all"
       end
     end
-    namespace :pull do
+    namespace :pull_db do
       desc "downloads and loads the pat db"
       task :pat do
-        pull "pat", "summerprojecttool", "pat_prod"
+        pull_db "pat", "summerprojecttool", "pat_prod"
       end
       desc "downloads and loads the pat dev db"
       task :pat_dev do
-        pull "pat_dev", "spt_dev", "pat_dev"
+        pull_db "pat_dev", "spt_dev", "pat_dev"
       end
       desc "downloads and loads the pulse db"
       task :pulse do
-        pull "pulse", "emu", "pulse_prod"
+        pull_db "pulse", "emu", "pulse_prod"
       end
       desc "downloads and loads the emu db"
       task :emu do
-        pull "emu", "emu_stage", "pulse_stage_emu"
+        pull_db "emu", "emu_stage", "pulse_stage_emu"
       end
       desc "downloads and loads the moose db"
       task :moose do
-        pull "moose", "emu_dev", "pulse_dev_moose"
+        pull_db "moose", "emu_dev", "pulse_dev_moose"
       end
       desc "downloads and loads the intranet db"
       task :intranet do
-        pull "intranet", "ciministry", "cim_prod"
+        pull_db "intranet", "ciministry", "cim_prod"
       end
       desc "downloads and loads the intranet dev db"
       task :intranet_dev do
-        pull "intranet_dev", "dev_campusforchrist", "cim_dev"
+        pull_db "intranet_dev", "dev_campusforchrist", "cim_dev"
       end
     end
   end

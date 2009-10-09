@@ -1,6 +1,5 @@
 require "#{File.dirname(__FILE__)}/../rake_helper.rb"
 
-
 namespace "p2c" do
   namespace "clone" do
     desc "clones pat production to development"
