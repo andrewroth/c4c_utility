@@ -13,7 +13,9 @@ def clone(params)
   throw "need a :dev database" unless dev.present?
 
   # grab password if haven't already
-  unless @password.present?
+  if !@password.present? && File.exists(pwdfile = Rails.root.join("config/dbpw"))
+    @password = File.read(pwdfile).chomp
+  elsif !@password.present?
     STDOUT.print "database password: "
     @password = STDIN.gets.chomp
   end
