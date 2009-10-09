@@ -52,9 +52,9 @@ namespace :deploy do
       task :emu do
         run_remote_rake "p2c:clone:emu"
       end
-      desc "runs p2c:clone:ciministry remotely"
+      desc "runs p2c:clone:intranet_dev remotely"
       task :ciministry do
-        run_remote_rake "p2c:clone:ciministry"
+        run_remote_rake "p2c:clone:intranet_dev"
       end
       desc "runs p2c:clone:moose remotely"
       task :moose do

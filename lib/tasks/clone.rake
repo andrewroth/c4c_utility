@@ -15,11 +15,11 @@ namespace "p2c" do
       clone :prod => 'emu', :dev => 'emu_stage'
     end
     desc "clones intranet database to dev intranet"
-    task "dev.intranet" => :environment do
+    task "intranet_dev" => :environment do
       clone :prod => 'ciministry', :dev => 'dev_campusforchrist'
     end
     desc "clones all c4c apps production sites to development"
-    task "all" => [ "pat_dev", "emu", "moose", "dev.intranet" ] do
+    task "all" => [ "pat_dev", "emu", "moose", "intranet_dev" ] do
     end
   end
 end
