@@ -1,3 +1,7 @@
+def load_dump(dump, db)
+  execute_shell "cat #{dump} | mysql --user root #{db}"
+end
+
 # expects
 #
 # :prod => <name of production database>

@@ -7,15 +7,15 @@ namespace "p2c" do
     task "pat_dev" => :environment do
       clone :prod => 'summerprojecttool', :dev => 'spt_dev'
     end
-    desc "clones pulse database to emu"
+    desc "clones pulse db to emu"
     task "emu" => :environment do
       clone :prod => 'emu', :dev => 'emu_dev'
     end
-    desc "clones pulse database to moose"
+    desc "clones pulse db to moose"
     task "moose" => :environment do
       clone :prod => 'emu', :dev => 'emu_stage'
     end
-    desc "clones intranet database to dev intranet"
+    desc "clones intranet db to dev intranet"
     task "intranet_dev" => :environment do
       clone :prod => 'ciministry', :dev => 'dev_campusforchrist'
     end
@@ -24,31 +24,31 @@ namespace "p2c" do
     end
   end
   namespace "dump" do
-    desc "dumps prod pat"
+    desc "dumps pat prod db"
     task "pat" => :environment do
       clone :prod => 'summerprojecttool', :file => true
     end
-    desc "dumps dev pat"
+    desc "dumps pat dev db"
     task "pat_dev" => :environment do
       clone :prod => 'spt_dev', :file => true
     end
-    desc "dumps pulse database"
+    desc "dumps pulse db"
     task "pulse" => :environment do
       clone :prod => 'emu', :file => true
     end
-    desc "dumps emu database"
+    desc "dumps emu db"
     task "emu" => :environment do
       clone :prod => 'emu_dev', :file => true
     end
-    desc "dumps moose database"
+    desc "dumps moose db"
     task "moose" => :environment do
       clone :prod => 'emu_stage', :file => true
     end
-    desc "dumps prod intranet database to dev intranet"
+    desc "dumps intranet prod db"
     task "intranet" => :environment do
       clone :prod => 'ciministry', :file => true
     end
-    desc "dumps dev intranet database to dev intranet"
+    desc "dumps intranet dev db"
     task "intranet_dev" => :environment do
       clone :prod => 'dev_campusforchrist', :file => true
     end
