@@ -1,7 +1,8 @@
 # expects
 #
 # :prod => <name of production database>
-# :dev => <name of development database>
+# :dev => <name of development database to copy prod to> OR 
+#         <file boolean, which dumps to tmp/#{prod}>
 #
 # production will be clone to development
 # 
