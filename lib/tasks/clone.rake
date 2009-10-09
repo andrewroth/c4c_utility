@@ -27,8 +27,10 @@ def execute_sql(command)
     @sql = ActiveRecord::Base.connection
   end
 
-  puts "SQL: #{command}"
-  @sql.execute command
+  for c in command.split(';')
+    puts "SQL: #{c}"
+    @sql.execute c
+  end
 end
 
 def execute_shell(command)
@@ -55,7 +57,7 @@ namespace "p2c" do
     execute_sql "USE dev_campusforchrist; delete from site_session;"
 
     # rotate logs
-    execute_shell "logrotate -vf /etc/logrotate.d/railsapps"
+    execute_shell "logrotate -f /etc/logrotate.d/railsapps"
   end
 
   namespace "clone" do
