@@ -52,7 +52,7 @@ namespace "p2c" do
       clone :prod => 'dev_campusforchrist', :file => true
     end
     desc "dumps all c4c intranet dbs to file"
-    task "all" => [ "pat", "pat_dev", "pulse", "emu", "moose", "intranet", "intarnet_dev" ] do
+    task "all" => [ "pat", "pat_dev", "pulse", "emu", "moose", "intranet", "intranet_dev" ] do
     end
   end
 end
