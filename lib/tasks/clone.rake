@@ -9,11 +9,11 @@ namespace "p2c" do
     end
     desc "clones pulse db to emu"
     task "emu" => :environment do
-      clone :prod => 'emu', :dev => 'emu_dev'
+      clone :prod => 'emu', :dev => 'emu_stage'
     end
     desc "clones pulse db to moose"
     task "moose" => :environment do
-      clone :prod => 'emu', :dev => 'emu_stage'
+      clone :prod => 'emu', :dev => 'emu_dev'
     end
     desc "clones intranet db to dev intranet"
     task "intranet_dev" => :environment do
