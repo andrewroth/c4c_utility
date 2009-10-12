@@ -1,7 +1,7 @@
 def load_dump(dump, db)
   throw "Overwriting production database detected! db: #{db}" if %w(summerprojecttool emu ciministry).include?(db.to_s)
   execute_sql "DROP DATABASE IF EXISTS #{db}; CREATE DATABASE #{db}"
-  execute_shell "cat #{dump} | mysql --user root #{db}"
+  execute_shell "gunzip #{dump}.gz | cat #{dump} | mysql --user root #{db}"
 end
 
 # expects
@@ -30,7 +30,7 @@ def clone(params)
 
   options = "--extended-insert --skip-lock-tables --skip-add-locks  --skip-set-charset --skip-disable-keys"
   if file
-    dest = "> #{Rails.root.join("tmp/#{prod}.sql")}"
+    dest = "| gzip > #{Rails.root.join("tmp/#{prod}.sql.gz")}"
   else
     dest = "| mysql -h web-db.powertochange.local -u ciministry --password=#{@password} #{dev}"
   end
@@ -49,12 +49,12 @@ def execute_sql(command)
   end
 
   for c in command.split(';')
-    puts "SQL: #{c}"
+    puts "[SQL] #{c.lstrip.rstrip}"
     @sql.execute c
   end
 end
 
 def execute_shell(command)
-  puts "SHELL: #{command}"
+  puts "[SH ] #{command}"
   system command
 end
