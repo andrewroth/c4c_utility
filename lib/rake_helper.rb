@@ -38,6 +38,11 @@ def clone(params)
 end
 
 def execute_sql(command)
+  unless defined?(ActiveRecord)
+    require "active_record"
+    ActiveRecord::Base.establish_connection :adapter => :mysql
+  end
+
   # grab a connection if there's not one already
   unless @sql
     @sql = ActiveRecord::Base.connection

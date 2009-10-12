@@ -1,7 +1,11 @@
+require "#{File.dirname(__FILE__)}/../lib/rake_helper.rb"
+require "#{File.dirname(__FILE__)}/../lib/cap_helper.rb"
+
 set :application, "c4c_utility"
 set :repository,  "git://github.com/andrewroth/c4c_utility.git"
 set :scm, "git"
 set :keep_releases, 3
+set :rails_env, "development"
 
 # If you aren't deploying to /u/apps/#{application} on the target
 # servers (which is the default), you can specify the actual location
@@ -34,22 +38,6 @@ end
 deploy.task :after_symlink do
   link_shared 'config/database.yml'
   link_shared 'config/dbpw'
-end
-
-set :rails_env, "development"
-
-# Rake helper task.
-def run_remote_rake(rake_cmd)
-  rake = fetch(:rake, "rake")
-  rails_env = fetch(:rails_env, "production")
-  run "cd #{current_path} && #{rake} RAILS_ENV=#{rails_env} #{rake_cmd.split(',').join(' ')}"
-end
-
-def pull_db(task, prod_db, local_db)
-  run_remote_rake "p2c:dump:#{task}"
-  remote_dump_path = "#{current_path}/tmp/#{prod_db}.sql"
-  download remote_dump_path
-  load_dump remote_dump_path, local_db
 end
 
 namespace :deploy do
@@ -111,7 +99,7 @@ namespace :deploy do
         run_remote_rake "p2c:dump:all"
       end
     end
-    namespace :pull_db do
+    namespace :pull do
       desc "downloads and loads the pat db"
       task :pat do
         pull_db "pat", "summerprojecttool", "pat_prod"
