@@ -127,6 +127,16 @@ namespace :deploy do
       task :intranet_dev do
         pull_db "intranet_dev", "dev_campusforchrist", "cim_dev"
       end
+      desc "downloads and loads all databases"
+      task :all do
+        pat
+        pat_dev
+        pulse
+        emu
+        moose
+        intranet
+        intranet_dev
+      end
     end
   end
 end
