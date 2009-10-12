@@ -37,11 +37,11 @@ namespace "p2c" do
     end
     desc "dumps emu db"
     task "emu" => :environment do
-      clone :prod => 'emu_dev', :file => true
+      clone :prod => 'emu_stage', :file => true
     end
     desc "dumps moose db"
     task "moose" => :environment do
-      clone :prod => 'emu_stage', :file => true
+      clone :prod => 'emu_dev', :file => true
     end
     desc "dumps intranet prod db"
     task "intranet" => :environment do
