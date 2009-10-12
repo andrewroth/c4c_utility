@@ -1,8 +1,11 @@
+require "#{File.dirname(__FILE__)}/../lib/rake_helper.rb"
+
 def pull_db(task, prod_db, local_db)
   run_remote_rake "p2c:dump:#{task}"
   local_dump_path = "tmp/#{prod_db}.sql"
   remote_dump_path = "#{current_path}/tmp/#{prod_db}.sql"
-  download remote_dump_path, local_dump_path
+  download remote_dump_path+'.gz', local_dump_path+'.gz'
+  execute_shell "gunzip #{local_dump_path}.gz -f"
   load_dump local_dump_path, local_db
 end
 

@@ -1,7 +1,7 @@
 def load_dump(dump, db)
   throw "Overwriting production database detected! db: #{db}" if %w(summerprojecttool emu ciministry).include?(db.to_s)
   execute_sql "DROP DATABASE IF EXISTS #{db}; CREATE DATABASE #{db}"
-  execute_shell "gunzip #{dump}.gz | cat #{dump} | mysql --user root #{db}"
+  execute_shell "cat #{dump} | mysql --user root #{db}"
 end
 
 # expects

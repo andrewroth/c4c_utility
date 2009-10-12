@@ -1,4 +1,3 @@
-require "#{File.dirname(__FILE__)}/../lib/rake_helper.rb"
 require "#{File.dirname(__FILE__)}/../lib/cap_helper.rb"
 
 set :application, "c4c_utility"
