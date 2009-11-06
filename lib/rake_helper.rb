@@ -1,7 +1,14 @@
+require File.join(File.dirname(__FILE__), 'detect_windows')
+
 def load_dump(dump, db)
   throw "Overwriting production database detected! db: #{db}" if %w(summerprojecttool emu ciministry).include?(db.to_s)
   execute_sql "DROP DATABASE IF EXISTS #{db}; CREATE DATABASE #{db}"
-  execute_shell "cat #{dump} | mysql --user root #{db}"
+  output_command = Kernel.is_windows? ? 'type' : 'cat'
+  @config ||= YAML::load(File.open(File.join(File.dirname(__FILE__), '..', 'config', 'database.yml')))
+  username = @config['development']['username'] || 'root'
+  password = @config['development']['password'] || ''
+  puts "username: #{username} password: #{password}"
+  execute_shell "#{output_command} #{dump} | mysql --user #{username} #{db} --password=#{password}"
 end
 
 # expects
