@@ -38,4 +38,4 @@
 
 :apps:
   pat: git://github.com/andrewroth/project_application_tool.git
-  mpdtool: git://github.com/andrewroth/ministry-tracker.git
+  pulse: git://github.com/twinge/ministry-tracker.git
