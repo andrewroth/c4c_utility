@@ -33,9 +33,8 @@ def run_shell_forked(cmd)
   puts "[SH ] #{cmd}"
   if fork.nil?
     exec(cmd)
-    Kernel.exit!
+    #Kernel.exit!
   end
-  exec(cmd) if fork.nil?
   Process.wait
 end
 
@@ -77,36 +76,36 @@ def provision(server, server_config, local)
   puts "[DBG] setup #{server} config #{server_config.inspect}"
   tmp_dir = "#{RAILS_ROOT}/tmp"
   for app, repo in @config[:apps]
-    puts "======================== SITE #{app} ========================"
+    puts "========================  SITE  #{app.ljust(7, " ")} ========================"
     app_root = "#{tmp_dir}/#{app}"
     # checkout
+    skipping = false
     unless File.directory? app_root
       run_shell "git clone #{repo} #{app_root}"
-      Dir.chdir app_root
-      for stage in @config[:stages]
-        run_shell "git checkout -b #{server}.#{stage} origin/#{server}.#{stage}"
-      end
-    else
-      Dir.chdir app_root
     end
-    # set flag to keep app/manifests/assets/private from being deleted
+    Dir.chdir app_root
     ENV['skip_hooks'] = 'true'
     # set up all apps on server
     first = true # first time deploy:setup should run
     @config[:stages].each do |stage|
       cap_stage = "#{server}/#{stage}"
-      puts "============ deploying #{stage} ============"
-      new_cap cap_stage
-      # update
-      run_shell "git checkout #{server}.#{stage}"
+      puts "------------------------ deploy #{stage.ljust(7, " ")} ------------------------"
+      # update and make sure this app is supposed to go on this server
+      if !run_shell("git checkout #{server}.#{stage}")
+        if !run_shell("git checkout -b #{server}.#{stage} origin/#{server}.#{stage}")
+          puts "[WRN] Skipping installation of #{app} on #{server} since no #{server}.#{stage} branch found"
+          next
+        end
+      end
       run_shell "git pull"
+      new_cap cap_stage
       # deploy
       server_moonshine_folder = "#{app_root}/config/deploy/#{server}"
       stage_moonshine_file = "#{server_moonshine_folder}/#{stage}_moonshine.yml"
       if File.directory?(server_moonshine_folder) && File.exists?(stage_moonshine_file)
         # initial setup 
         if first && ENV['skip_setup'] != 'true'
-          unless local
+          if local
             cap_download_private(cap_stage)
             cap_upload_certs(cap_stage)
             run_cap cap_stage, "deploy:setup"
