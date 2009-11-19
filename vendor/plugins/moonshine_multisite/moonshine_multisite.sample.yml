@@ -15,11 +15,11 @@
 - prod
 
 :servers:
-  # a short host identifier (recommended <= 4 chars)
+  # a short host identifier (recommended < 4 chars)
   :abc: 
     user: deploy
     group: www-data
-    host: host.com
+    server: host.com # used in deploy.rb file in "server <server>, :roles => ..."
     lan_ip: 192.168.1.112 # make apache listed on this address
     domain: host.com # used to name some config vars and cert files
     time_zone: PST

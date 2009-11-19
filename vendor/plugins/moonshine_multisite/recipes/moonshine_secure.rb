@@ -3,7 +3,7 @@ namespace :moonshine do
     desc "uploads the certificate files in app/manifests/assets/private/certs to /tmp/moonshine_config_files"
     task :upload_certs do
       destroy_config_files
-      upload "app/manifests/private/certs/", 
+      upload "app/manifests/private/assets/certs/", 
     "/tmp/moonshine_config_files/", 
     :recursive => true
     end

@@ -49,11 +49,11 @@ class MoonshineMultisiteGenerator < Rails::Generator::NamedBase
       for local in [ false ] # eventuall I want to add manifests for setting up for local dev
         for @stage in STAGES
           m.template "config/deploy/deploy.host.rb.erb", 
-              "config/deploy/#{'local/' if local}#{@host}/#{@stage}.rb",
-          :assigns => { :host => "#{name}.#{domain}" }
+            "config/deploy/#{'local/' if local}#{@host}/#{@stage}.rb",
+            :assigns => { :server => "#{@@config[:server]}" }
           m.template "config/deploy/moonshine_stage.yml", 
-              "config/deploy/#{'local/' if local}#{@host}/#{@stage}_moonshine.yml", 
-          :assigns => { :domain => domain, :host => @host, :stage => @stage, :local => local }
+            "config/deploy/#{'local/' if local}#{@host}/#{@stage}_moonshine.yml", 
+            :assigns => { :domain => domain, :host => @host, :stage => @stage, :local => local }
         end
       end
       # generate deploy.rb with appropriate stages

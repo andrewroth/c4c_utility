@@ -1,24 +1,3 @@
-# This config file contains details about each site.
-#  
-# # a short label for the host (recommended <= 4 chars)
-# abc: 
-#   # user and host for the deploy server
-#   user: deploy
-#   host: host.com
-#   lan_ip: 192.168.1.112 # make apache listed on this address
-#   domain: host.com # used to name some config vars and cert files
-#   branch: moonshine
-#   # these next configs are optional; use it to specify a secure location
-#   # to download your configs to app/manifests/assets/private and set
-#   # local_config appropriately
-#   private_path: /home/campus/homes/andrewr/private_repo
-#   private_host: private.secure.com
-#   private_user: andrewr
-#
-# Repeat this for as many sites as you have.
-#
-# You should also set a stages array, and optionally a legacy_stages (see below)
-#
 ---
 
 # stages are required -- sets the stages you want your sites to work with
@@ -48,7 +27,7 @@
   :p2c:
     user: deploy
     group: www-data
-    server: 192.168.1.112
+    server: pat.powertochange.org
     lan_ip: 192.168.1.112
     domain: powertochange.org
     repository: git://github.com/twinge/ministry-tracker.git
