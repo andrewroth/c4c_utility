@@ -1,0 +1,12 @@
+# Configs here will override the moonshine.yml configs.
+#
+# Note: This file was generated from moonshine_ministry_hacks plugin. If
+# possible, instead of making changes here, modify those generators and
+# re-generate (using ruby script/generate moonshine_ministry_hacks) amongst 
+# all ministry hacks apps.
+#
+:application: <%= name %>.<%= domain %>
+:deploy_to: /var/www/<%= name %>.<%= stage %>.<%= domain %>
+:branch: <%= host %>.<%= stage %>
+:local_config:
+- app/manifests/assets/<%= local ? 'public' : 'private' %>/<%= 'local/' if local %><%= host %>/<%= name %>.<%= stage %>.<%= domain %>/database.yml: config/database.yml

@@ -1,0 +1,62 @@
+# This config file contains details about each site.
+#  
+# # a short label for the host (recommended <= 4 chars)
+# abc: 
+#   # user and host for the deploy server
+#   user: deploy
+#   host: host.com
+#   lan_ip: 192.168.1.112 # make apache listed on this address
+#   domain: host.com # used to name some config vars and cert files
+#   branch: moonshine
+#   # these next configs are optional; use it to specify a secure location
+#   # to download your configs to app/manifests/assets/private and set
+#   # local_config appropriately
+#   private_path: /home/campus/homes/andrewr/private_repo
+#   private_host: private.secure.com
+#   private_user: andrewr
+#
+# Repeat this for as many sites as you have.
+#
+# You should also set a stages array, and optionally a legacy_stages (see below)
+#
+---
+
+# stages are required -- sets the stages you want your sites to work with
+:stages: 
+- prod
+- staging
+- dev
+
+# legacy_stages are optional - sets up some stages for use without capistrano-ext
+# this is useful if you have a sysadmin who doesn't want to use moonshine
+:legacy_stages: 
+- dev
+- prod
+
+:servers:
+  :c4c:
+    user: deploy
+    group: www-data
+    server: pat.powertochange.org
+    lan_ip: 192.168.1.112
+    domain: campusforchrist.org
+    repository: git://github.com/twinge/ministry-tracker.git
+    time_zone: PST
+    private_path: /home/deploy/private_repo
+    private_host: 208.87.54.217
+    private_user: deploy
+  :p2c:
+    user: deploy
+    group: www-data
+    server: 192.168.1.112
+    lan_ip: 192.168.1.112
+    domain: powertochange.org
+    repository: git://github.com/twinge/ministry-tracker.git
+    time_zone: PST
+    private_path: /home/deploy/private_repo
+    private_host: 208.87.54.217
+    private_user: deploy
+
+:apps:
+  pat: git://github.com/andrewroth/project_application_tool.git
+  mpdtool: git://github.com/andrewroth/ministry-tracker.git

@@ -1,0 +1,16 @@
+# This file was generated from moonshine_ministry_hacks.
+
+# multistage
+set :stages, %w(<%= stages.join(" ") %>)
+after "multistage:ensure", "moonshine:load_moonshine_config"
+require 'capistrano/ext/multistage'
+
+# upload 
+if File.directory?('app/manifests/private/certs/')
+  before "deploy:setup", "moonshine:secure:upload_certs"
+  after "deploy:setup", "moonshine:secure:destroy_config_files"
+end
+
+# always remove the config-sensitive files from /tmp after
+after "deploy:setup", "moonshine:secure:destroy_config_files"
+after "deploy", "moonshine:secure:destroy_config_files"

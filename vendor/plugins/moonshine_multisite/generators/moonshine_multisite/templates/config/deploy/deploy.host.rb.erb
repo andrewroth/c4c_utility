@@ -1,0 +1,15 @@
+server "<%= host %>", :app, :web, :db, :primary => true
+
+# if download_private isn't overridden here, these attributes will be
+# used to download sensitive configuration files from a server (see more
+# detailed explanation below)
+set :private_user, '<%= attributes['private_user'] %>'
+set :private_host, '<%= attributes['private_host'] %>'
+set :private_path, '<%= attributes['private_path'] %>'
+
+# If you want to manually implement download_private, do so here.
+# Set the appropriate local_config path in moonshine.yml or
+# <stage>_moonshine.yml.
+#
+#task :download_private
+#end
