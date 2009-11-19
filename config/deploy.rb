@@ -1,5 +1,6 @@
 require "#{File.dirname(__FILE__)}/../lib/cap_helper.rb"
 
+set :moonshine_apply, false
 set :application, "c4c_utility"
 set :repository,  "git://github.com/andrewroth/c4c_utility.git"
 set :scm, "git"
