@@ -2,7 +2,6 @@ MOONSHINE_MULTISITE_ROOT = "#{File.dirname(__FILE__)}/../.."
 RAILS_ROOT = "#{MOONSHINE_MULTISITE_ROOT}/../../.."
 @config = YAML::load(File.read("#{MOONSHINE_MULTISITE_ROOT}/moonshine_multisite.yml"))
 
-require 'ruby-debug'
 require 'capistrano/cli'
 
 namespace :moonshine do
