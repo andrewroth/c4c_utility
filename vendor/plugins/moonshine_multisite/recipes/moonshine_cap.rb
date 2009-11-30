@@ -178,6 +178,8 @@ namespace :local_config do
       local_file, remote_file = extract_local_config_entry(file)
       if File.exist?( local_file )
         parent.upload(local_file, "#{shared_path}/#{remote_file}")
+      else
+        puts "Warning: Couldn't find local_file #{local_file}"
       end
     end
   end
