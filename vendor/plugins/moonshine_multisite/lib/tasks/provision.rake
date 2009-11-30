@@ -103,8 +103,8 @@ def provision(server, server_config, local)
       stage_moonshine_file = "#{server_moonshine_folder}/#{stage}_moonshine.yml"
       if File.directory?(server_moonshine_folder) && File.exists?(stage_moonshine_file)
         # initial setup 
-        if first && ENV['skip_setup'] != 'true'
-          if local
+        if (first && ENV['skip_setup'] != 'true') || (ENV['only_setup'] == 'true')
+          unless local
             cap_download_private(cap_stage)
             cap_upload_certs(cap_stage)
             run_cap cap_stage, "deploy:setup"
@@ -115,6 +115,7 @@ def provision(server, server_config, local)
         else
           run_cap cap_stage, "moonshine:setup_directories"
         end
+        next if ENV['only_setup'] == 'true'
         # deploy to actually get everything there
         run_cap cap_stage, "deploy"
       else
