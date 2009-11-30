@@ -1,5 +1,8 @@
 require "#{File.dirname(__FILE__)}/../rake_helper.rb"
 
+@config = nil # clear out moonshine version
+load_config
+
 namespace "p2c" do
   namespace "load" do
     desc "drops and reloads pat prod db from the latest sql dump in tmp"
