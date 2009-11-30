@@ -1,13 +1,13 @@
 MOONSHINE_MULTISITE_ROOT = "#{File.dirname(__FILE__)}/../.."
 RAILS_ROOT = "#{MOONSHINE_MULTISITE_ROOT}/../../.."
-@config = YAML::load(File.read("#{MOONSHINE_MULTISITE_ROOT}/moonshine_multisite.yml"))
+@multisite_config = YAML::load(File.read("#{MOONSHINE_MULTISITE_ROOT}/moonshine_multisite.yml"))
 
 require 'capistrano/cli'
 
 namespace :moonshine do
   namespace :multisite do
     namespace :provision do
-      @config[:servers].each do |server, server_config|
+      @multisite_config[:servers].each do |server, server_config|
         desc "Provision the #{server} server"
         task server do
           provision(server, server_config, false)
@@ -74,7 +74,7 @@ end
 def provision(server, server_config, local)
   puts "[DBG] setup #{server} config #{server_config.inspect}"
   tmp_dir = "#{RAILS_ROOT}/tmp"
-  for app, repo in @config[:apps]
+  for app, repo in @multisite_config[:apps]
     puts "========================  SITE  #{app.ljust(7, " ")} ========================"
     app_root = "#{tmp_dir}/#{app}"
     # checkout
@@ -86,7 +86,7 @@ def provision(server, server_config, local)
     ENV['skip_hooks'] = 'true'
     # set up all apps on server
     first = true # first time deploy:setup should run
-    @config[:stages].each do |stage|
+    @multisite_config[:stages].each do |stage|
       cap_stage = "#{server}/#{stage}"
       puts "------------------------ deploy #{stage.ljust(7, " ")} ------------------------"
       # update and make sure this app is supposed to go on this server
