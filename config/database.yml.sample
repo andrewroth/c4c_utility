@@ -2,3 +2,4 @@ development:
   username: root
   password: 
   adapter: mysql
+  database: database
