@@ -19,22 +19,30 @@
     server: pat.powertochange.org
     lan_ip: 192.168.1.112
     domain: campusforchrist.org
-    repository: git://github.com/twinge/ministry-tracker.git
     time_zone: PST
     private_path: /home/deploy/private_repo
     private_host: 208.87.54.217
     private_user: deploy
+    ssl: true
   :p2c:
     user: deploy
     group: www-data
     server: pat.powertochange.org
     lan_ip: 192.168.1.112
     domain: powertochange.org
-    repository: git://github.com/twinge/ministry-tracker.git
     time_zone: PST
     private_path: /home/deploy/private_repo
     private_host: 208.87.54.217
     private_user: deploy
+    ssl: true
+  :local:
+    user: deploy
+    group: www-data
+    server: 127.0.0.1
+    lan_ip: *
+    domain: <%= %x[whoami].chomp %>
+    time_zone: EST
+    ssl: false
 
 :apps:
   pat: git://github.com/andrewroth/project_application_tool.git

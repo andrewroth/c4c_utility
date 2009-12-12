@@ -7,7 +7,7 @@
 :group: <%= attributes['group'] %>
 :repository: <%= repository %>
 :lan_ip: <%= attributes["lan_ip"] %>
-:ruby: ree
+:ruby: ree187
 :time_zone: <%= attributes["time_zone"] %>
 :domain: <%= attributes["domain"] %>
 # ssl
