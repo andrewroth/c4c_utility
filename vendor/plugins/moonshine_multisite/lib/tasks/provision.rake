@@ -118,6 +118,11 @@ def provision(server, server_config, local)
           run_cap cap_stage, "moonshine:setup_directories"
         end
 =end
+        if first
+          run_cap cap_stage, "deploy:setup"
+        else
+          run_cap cap_stage, "moonshine:setup_directories"
+        end
         first = false
         #next if ENV['only_setup'] == 'true'
         # deploy to actually get everything there
