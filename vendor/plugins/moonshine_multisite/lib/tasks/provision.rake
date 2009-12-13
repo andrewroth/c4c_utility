@@ -12,7 +12,6 @@ namespace :moonshine do
         task server do
           provision(server, server_config, false)
         end
-        desc "Provision the #{server} server"
       end
     end
   end 
@@ -89,6 +88,7 @@ def provision(server, server_config, local)
     @multisite_config[:stages].each do |stage|
       cap_stage = "#{server}/#{stage}"
       puts "------------------------ deploy #{stage.ljust(7, " ")} ------------------------"
+      run_shell "git pull"
       # update and make sure this app is supposed to go on this server
       if !run_shell("git checkout #{server}.#{stage}")
         if !run_shell("git checkout -b #{server}.#{stage} origin/#{server}.#{stage}")
@@ -96,12 +96,12 @@ def provision(server, server_config, local)
           next
         end
       end
-      run_shell "git pull"
       new_cap cap_stage
       # deploy
       server_moonshine_folder = "#{app_root}/config/deploy/#{server}"
       stage_moonshine_file = "#{server_moonshine_folder}/#{stage}_moonshine.yml"
       if File.directory?(server_moonshine_folder) && File.exists?(stage_moonshine_file)
+=begin
         if first
           # each app needs to download the private assets directory, so that database.yml can be copied
           cap_download_private(cap_stage)
@@ -117,8 +117,9 @@ def provision(server, server_config, local)
         else
           run_cap cap_stage, "moonshine:setup_directories"
         end
+=end
         first = false
-        next if ENV['only_setup'] == 'true'
+        #next if ENV['only_setup'] == 'true'
         # deploy to actually get everything there
         run_cap cap_stage, "deploy"
       else

@@ -10,10 +10,12 @@
 :ruby: ree187
 :time_zone: <%= attributes["time_zone"] %>
 :domain: <%= attributes["domain"] %>
+<% if attributes['ssl'] %>
 # ssl
 :ssl: 
   :certificate_file: /etc/apache2/certs/<%= attributes['domain'] %>.cert
   :certificate_key_file: /etc/apache2/certs/<%= attributes['domain'] %>.key
+<% end %>
 # Use :app_symlinks to setup directories under public/ that you want to persist
 # across deployments. They'll be symlinked to the shared directory.
 #:app_symlinks:
