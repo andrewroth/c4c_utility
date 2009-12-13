@@ -1,7 +1,10 @@
 require File.join(File.dirname(__FILE__), 'detect_windows')
 
 def load_config
-  @config ||= YAML::load(File.open(File.join(File.dirname(__FILE__), '..', 'config', 'database.yml')))
+  file = File.join(File.dirname(__FILE__), '..', 'config', 'database.yml')
+  if File.exists?(file)
+    @config ||= YAML::load(File.open(file))
+  end
 end
 
 def load_dump(dump, db)
