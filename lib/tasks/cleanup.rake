@@ -1,4 +1,4 @@
-require "#{File.dirname(__FILE__)}/../rake_helper.rb"
+require "#{File.dirname(__FILE__)}/../../vendor/plugins/moonshine_multisite/lib/rake_helper.rb"
 
 def clear_sessions(db, table = "sessions")
   puts "clearing sessions in #{db}.#{table}"

@@ -9,31 +9,23 @@ set :keep_releases, 2
 
 after 'deploy:restart', 'deploy:cleanup'
 
-#load the moonshine configuration into
 require 'yaml'
-
-# it's important that we have the stages
-load File.join(File.dirname(__FILE__), '..', 'lib', 'moonshine_config_helper')
-
-def load_moonshine_config_internal
-  begin
-    apply_moonshine_config
-  rescue Exception
-    puts "To use Capistrano with Moonshine, please run 'ruby script/generate moonshine',"
-    puts "edit config/moonshine.yml, then re-run capistrano."
-    exit(1)
-  end
-end
-
-load_moonshine_config_internal
+require "#{File.dirname(__FILE__)}/../lib/multisite_helper.rb"
+set_stages
+after "multistage:ensure", "moonshine:load_moonshine_multisite_config"
 
 set :scm, :svn if !! repository =~ /^svn/
 
-  namespace :moonshine do
+namespace :moonshine do
 
-  desc "Moonshine internal helper task to load the config"
-  task :load_moonshine_config do
-    load_moonshine_config_internal
+  desc <<-DESC
+  Loads the moonshine_multisite config and, based on the stage, applies the
+  variables with cap's "set" method.  Also sets the server name and roles.
+  See also Moonshine::Multisite.apply_moonshine_multisite_config_from_cap
+  DESC
+  task :load_moonshine_multisite_config do
+    apply_moonshine_multisite_config_from_cap
+    server fetch(:server), :web, :app, :db
   end
 
   desc <<-DESC
@@ -52,7 +44,7 @@ set :scm, :svn if !! repository =~ /^svn/
   DESC
   task :setup_directories do
     begin
-      config = MoonshineConfigHelper.load_configs('moonshine.yml', ENV['RAILS_ROOT'] || Dir.pwd, fetch(:rails_env, 'production'), fetch(:stage, nil))
+      config = YAML.load_file(File.join(Dir.pwd, 'config', 'moonshine.yml'))
       put(YAML.dump(config),"/tmp/moonshine.yml")
     rescue Exception => e
       puts e
@@ -153,21 +145,21 @@ namespace :app do
 
 end
 
-# returns [ local_file, remote_file ] from an entry given for local_config
-def extract_local_config_entry(entry)
-  if entry.class == Hash
-    local_file = entry.keys.first
-    remote_file = entry.values.first
-  elsif file.class == Array
-    filename = File.split(entry).last
-    local_file = entry
-    remote_file = "config/#{filename}"
-  end
-
-  [ local_file, remote_file ]
-end
-
 namespace :local_config do
+
+  # helper method that returns [ local_file, remote_file ] from an entry given for local_config
+  def extract_entry(entry)
+    if entry.class == Hash
+      local_file = entry.keys.first
+      remote_file = entry.values.first
+    elsif file.class == Array
+      filename = File.split(entry).last
+      local_file = entry
+      remote_file = "config/#{filename}"
+    end
+
+    [ local_file, remote_file ]
+  end
 
   desc <<-DESC
   Uploads local configuration files to the application's shared directory for
@@ -178,6 +170,8 @@ namespace :local_config do
       local_file, remote_file = extract_local_config_entry(file)
       if File.exist?( local_file )
         parent.upload(local_file, "#{shared_path}/#{remote_file}")
+      else
+        puts "Warning: skipping missing local_config '#{local_file}'"
       end
     end
   end

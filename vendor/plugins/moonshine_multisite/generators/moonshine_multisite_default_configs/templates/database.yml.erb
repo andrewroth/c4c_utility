@@ -1,0 +1,25 @@
+defaults: &defaults
+  adapter: mysql
+  username: ciministry
+  password: <%= password %>
+  host: dbserver.powertochange.local
+
+development:
+  database: <%= database %>
+  <<: *defaults
+
+test:
+  database: <%= server %>.<%= app %>.test
+  <<: *defaults
+
+production:
+  database: <%= database %>
+  <<: *defaults
+
+ciministry_development:
+  database: <%= multisite_config_hash[:servers][server][:db_names][:intranet][stage] %>
+  <<: *defaults
+
+ciministry_production:
+  database: <%= multisite_config_hash[:servers][server][:db_names][:intranet][stage] %>
+  <<: *defaults

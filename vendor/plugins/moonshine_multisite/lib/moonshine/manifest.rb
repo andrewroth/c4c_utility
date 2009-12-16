@@ -2,15 +2,10 @@
 # for loading moonshine recpies from plugins, a template helper, and parses
 # several configuration files:
 #
-#   config/moonshine.yml
-#   config/RAILS_ENV/moonshine.yml
-#   config/deploy/STAGE_moonshine.yml
-#   TODO more locations
+#   vendor/plugins/moonshine_multisite/moonshine_multisite.yml
 #
-# The contents of <tt>moonshine.yml</tt> are expected to serialize into
-# a hash, and are loaded into the manifest's Configatron::Store.  The 
-# configs are loaded in that order, and any subsequent values override
-# the previous moonshine.yml values.
+# See <tt>recipes/multisite.rb</tt> for how the moonshine_multisite.yml is
+# loaded in to Configatron::Store.
 #
 #   config/database.yml
 #
@@ -136,13 +131,24 @@ class Moonshine::Manifest < ShadowPuppet::Manifest
     else
       raise LoadError, "Can't find template #{pathname}"
     end
-    ERB.new(template_contents, nil, '<>').result(b)
+    ERB.new(template_contents).result(b)
   end
 
-  configure(MoonshineConfigHelper.load_configs('moonshine.yml', rails_root, rails_env, deploy_stage))
+  # config/moonshine.yml
+  configure(YAML::load(ERB.new(IO.read(File.join(rails_root, 'config', 'moonshine.yml'))).result))
+
+  # config/moonshine/#{rails_env}.yml
+  env_config = File.join(rails_root, 'config', 'moonshine', rails_env + ".yml")
+  if File.exist?(env_config)
+    configure(YAML::load(ERB.new(IO.read(env_config)).result))
+  end
 
   # database config
-  db_config = Rails::configuration.database_configuration_file.to_s
+  if defined?(Rails)
+    db_config = Rails::configuration.database_configuration_file.to_s
+  else
+    db_config = File.join(rails_root, 'config', 'database.yml')
+  end
   configure(:database => YAML::load(ERB.new(IO.read(db_config))).result)
 
   # gems

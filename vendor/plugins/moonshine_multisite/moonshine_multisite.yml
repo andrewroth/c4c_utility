@@ -2,15 +2,15 @@
 
 # stages are required -- sets the stages you want your sites to work with
 :stages: 
-- prod
-- staging
-- dev
+- :prod
+- :staging
+- :dev
 
 # legacy_stages are optional - sets up some stages for use without capistrano-ext
 # this is useful if you have a sysadmin who doesn't want to use moonshine
 :legacy_stages: 
-- dev
-- prod
+- :dev
+- :prod
 
 :servers:
   :c4c:
@@ -20,7 +20,7 @@
     lan_ip: 192.168.1.112
     domain: campusforchrist.org
     time_zone: PST
-    private_path: /home/deploy/private_repo
+    private_path: /home/deploy/private_repo2
     private_host: 208.87.54.217
     private_user: deploy
     ssl: true
@@ -31,19 +31,33 @@
     lan_ip: 192.168.1.112
     domain: powertochange.org
     time_zone: PST
-    private_path: /home/deploy/private_repo
+    private_path: /home/deploy/private_repo2
     private_host: 208.87.54.217
     private_user: deploy
     ssl: true
+    :db_names:
+      :pat:
+        :prod: summerprojecttool
+        :dev: spt_dev
+        :staging: 
+      :pulse:
+        :prod: pulse
+        :dev: moose
+        :staging: emu
+      :intranet:
+        :prod: ciministry
+        :dev: dev_campusforchrist
+        :staging: dev_campusforchrist
   :local:
     user: deploy
     group: www-data
-    server: 127.0.0.1
+    server: 192.168.1.112
     lan_ip: *
-    domain: <%= %x[whoami].chomp %>
+    domain: local
     time_zone: EST
     ssl: false
 
 :apps:
-  pat: git://github.com/andrewroth/project_application_tool.git
-  pulse: git://github.com/twinge/ministry-tracker.git
+  :pat: git://github.com/andrewroth/project_application_tool.git
+  :pulse: git://github.com/twinge/ministry-tracker.git
+  :intranet: 

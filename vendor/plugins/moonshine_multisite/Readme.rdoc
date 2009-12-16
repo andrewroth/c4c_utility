@@ -85,21 +85,15 @@ the shared folder file.
 
 I (Andrew Roth) added multisite support.  This is useful if you have a suite of
 web applications that you want to install to one or more servers.  It also uses
-capistrano-ext for stage support.  For example, you could have a web app "app1" 
-with stages "dev" and "prod" that you want on host.com and mirror.com.  To deploy
-the dev sites, you would do "cap host/dev deploy", "cap mirror/dev deploy".
+capistrano-ext for stage support.  
 
 For example, suppose you had a web app "app1" and stages "dev", "prod" and
 domains "foo-domain.com" and "bar-domain.com".  You would have:
 
+* config file moonshine_multisite.yml in the moonshine_multisite plugin directory.
 * shortcuts "foo" and "bar" to refer to those servers 
 * four stages: foo/dev, foo/prod, bar/dev, bar/prod
 * cap foo/dev deploy, cap foo/prod deploy tasks (same with deploy:setup)
-* branches foo.dev, foo.prod, bar.dev, bar.prod
-* deploy.rb files in deploy/<foo|bar>/<stage>.rb
-* moonshine.yml file in deploy/<foo|bar>/moonshine.yml
-* <stage>_moonshine.yml config files in deploy/<foo|bar>/<stage>_moonshine.yml 
-that merge overtop
 
 The process is:
 
@@ -107,16 +101,15 @@ The process is:
 
 2. use moonshine_multisite.simple.yml to make a moonshine_multisite.yml with your own stages and server info.  You will choose a short "app identifier" for each app and "host identifier" for each server.
 
-3. in each of your sites, install your moonshine_multisite and capistrano-ext
+3. install capistrano-ext
 
-    ruby script/plugin install git://github.com/moneypools/capistrano-ext.git
+sudo gem install capistrano-ext
+
+4. in each of your sites, install your moonshine_multisite
+
     ruby script/plugin install git://github.com/your_username/moonshine_multisite.git
 
-4. in each of your sites, install capistrano-ext from git://github.com/moneypools/capistrano-ext.git
-
-    ruby script/generate moonshine_multisite <app identifier> <host identifier>
-
-5. in your applications, make a new branch for each host and stage with the name <host identifier>.<stage>.  For example, branches abc.dev, abc.prod if you have a host abc and stages dev and prod.  Make sure these branches have moonshine_multisite and capistrano-ext.
+5. in your applications, make a new branch for each host and stage with the name <host identifier>.<stage>.  For example, branches abc.dev, abc.prod if you have a host identifier abc and stages dev and prod.  Make sure these branches have moonshine_multisite and capistrano-ext.
 
 6. to deploy the first application, run
     cap <host identifier>/<stage> deploy:setup
@@ -124,7 +117,8 @@ The process is:
 7. to deploy more sites to the server, don't run deploy:setup again, as that will compile ruby enterprise edition again.  Instead, run
     cap <host identifier>/<stage> moonshine:setup_directories
     cap <host identifier>/<stage> deploy
-There are also some capistrano helper tasks for handling secure configurations.  See cap -T moonshine:secure
+
+TODO: provioning rake task, database setup/copying/downloading
 
 === Running Tests
 

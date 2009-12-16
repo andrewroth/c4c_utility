@@ -1,10 +1,10 @@
-require "#{File.dirname(__FILE__)}/../lib/rake_helper.rb"
+require "#{File.dirname(__FILE__)}/rake_helper.rb"
 
-def pull_db(task, prod_db, local_db)
-  run_remote_rake "p2c:dump:#{task}"
-  local_dump_path = "tmp/#{prod_db}.sql".gsub(File::SEPARATOR, File::ALT_SEPARATOR || File::SEPARATOR)
-  remote_dump_path = "#{current_path}/tmp/#{prod_db}.sql"
-  download remote_dump_path+'.gz', local_dump_path+'.gz'
+def pull_db(app, server, stage, remote_db, local_db)
+  run_remote_rake "#{app}:dump:#{server}:#{stage}"
+  local_dump_path = "tmp/#{remote_db}.sql".gsub(File::SEPARATOR, File::ALT_SEPARATOR || File::SEPARATOR)
+  remote_dump_path = "#{current_path}/tmp/#{remote_db}.sql"
+  download remote_dump_path+'.gz', local_dump_path+'.gz' 
   gunzip = Kernel.is_windows? ? File.join(File.dirname(__FILE__), '..', 'windows', 'gzip', 'gunzip.exe') : 'gunzip'
   execute_shell "#{gunzip} #{local_dump_path}.gz -f"
   load_dump local_dump_path, local_db
