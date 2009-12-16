@@ -24,6 +24,7 @@
     private_host: 208.87.54.217
     private_user: deploy
     ssl: true
+    ruby: ree187 
   :p2c:
     user: deploy
     group: www-data
@@ -35,6 +36,9 @@
     private_host: 208.87.54.217
     private_user: deploy
     ssl: true
+    ruby: ree187 
+    shared_config:
+<%= Dir["config/database.*"].collect{ |sc| "      - " + sc }.join("\n") %>
     :db_names:
       :pat:
         :prod: summerprojecttool
@@ -56,6 +60,7 @@
     domain: local
     time_zone: EST
     ssl: false
+    ruby: ree187 
 
 :apps:
   :pat: git://github.com/andrewroth/project_application_tool.git

@@ -20,7 +20,7 @@ def multisite_config_hash
   return @multisite_config if @multisite_config
   file = "#{File.dirname(__FILE__)}/../moonshine_multisite.yml"
   return {} unless File.exists?(file)
-  @multisite_config = YAML.load_file(file)
+  @multisite_config = YAML.load(ERB.new(File.read(file)).result)
 end
 
 # Sets the key and values in capistrano from the moonshine multisite config
@@ -52,7 +52,7 @@ def get_stages
     multisite_config_hash[:stages].collect{ |stage|
       "#{host}/#{stage}"
     }
-  }.flatten + (multisite_config_hash[:legacy_stages] || []).collect(&:to_s)
+  }.flatten + (multisite_config_hash[:legacy_stages].collect(&:to_s) || [])
 end
 
 def set_stages

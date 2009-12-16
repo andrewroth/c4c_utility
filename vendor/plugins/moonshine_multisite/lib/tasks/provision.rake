@@ -50,7 +50,7 @@ def new_cap(stage)
     @cap_config.set(:password) { Capistrano::CLI.password_prompt }
   end
   @cap_config.load "Capfile"
-  @cap_config.load :file => "vendor/plugins/moonshine_multisite/recipes/multistage"
+  @cap_config.load :file => "vendor/plugins/moonshine_multisite/recipes/explicit/multistage"
   @cap_config.find_and_execute_task(stage)
   @cap_config.find_and_execute_task("multistage:ensure")
 end
@@ -74,8 +74,7 @@ def provision(server, server_config, local)
   puts "[DBG] setup #{server} config #{server_config.inspect}"
   tmp_dir = "#{RAILS_ROOT}/tmp"
   for app, repo in @multisite_config[:apps]
-    puts "========================  SITE  #{app.to_s.ljust(7, " ")} ========================"
-    next if repo.nil? || repo == ''
+    puts "========================  SITE  #{app.ljust(7, " ")} ========================"
     app_root = "#{tmp_dir}/#{app}"
     # checkout
     skipping = false
@@ -88,7 +87,7 @@ def provision(server, server_config, local)
     first = true # first time deploy:setup should run
     @multisite_config[:stages].each do |stage|
       cap_stage = "#{server}/#{stage}"
-      puts "------------------------ deploy #{stage.to_s.ljust(7, " ")} ------------------------"
+      puts "------------------------ deploy #{stage.ljust(7, " ")} ------------------------"
       run_shell "git pull"
       # update and make sure this app is supposed to go on this server
       if !run_shell("git checkout #{server}.#{stage}")

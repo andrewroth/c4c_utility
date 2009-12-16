@@ -43,20 +43,3 @@ for_dbs(:klone) do |p|
     end
   end
 end
-
-for_dbs(:create) do |p|
-  desc "creates #{p[:utopian]}"
-  task :"#{p[:stage]}" do
-    prepare_for_sql
-    ActiveRecord::Base.connection.create_database(p[:utopian])
-  end
-
-  if p[:legacy]
-    namespace p[:stage] do
-      desc "creates #{p[:legacy]}"
-      task :legacy do
-        ActiveRecord::Base.connection.create_database(p[:legacy])
-      end
-    end
-  end
-end

@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + "/../../recipes/multisite_helpers.rb"
+require File.dirname(__FILE__) + "/../../lib/multisite_helper.rb"
 
 class MoonshineMultisiteDefaultConfigsGenerator < Rails::Generator::Base
   def manifest
