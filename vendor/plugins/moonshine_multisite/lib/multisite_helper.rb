@@ -52,7 +52,7 @@ def get_stages
     multisite_config_hash[:stages].collect{ |stage|
       "#{host}/#{stage}"
     }
-  }.flatten + (multisite_config_hash[:legacy_stages].collect(&:to_s) || [])
+  }.flatten + (multisite_config_hash[:legacy_stages] || []).collect(&:to_s)
 end
 
 def set_stages
