@@ -1,0 +1,25 @@
+defaults: &defaults
+  adapter: mysql
+  username: root
+  password: 
+  host: localhost
+
+development:
+  database: local.pat.staging
+  <<: *defaults
+
+test:
+  database: local.pat.test
+  <<: *defaults
+
+production:
+  database: local.pat.staging
+  <<: *defaults
+
+ciministry_development:
+  database: local.intranet.staging
+  <<: *defaults
+
+ciministry_production:
+  database: local.intranet.staging
+  <<: *defaults
