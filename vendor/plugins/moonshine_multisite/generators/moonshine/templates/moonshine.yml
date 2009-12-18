@@ -18,7 +18,6 @@
 # to the server: these are files that you don't have/want in scm.
 #:shared_config:
 #  - config/database.yml
-#  - app/manifests/assets/database.yml: config/database.yml # example of a different remote path
 #
 # The entries in shared_children are created in #{application}/shared
 :shared_children:

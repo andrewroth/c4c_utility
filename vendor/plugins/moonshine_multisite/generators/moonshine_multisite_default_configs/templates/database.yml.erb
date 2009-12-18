@@ -1,8 +1,8 @@
 defaults: &defaults
   adapter: mysql
-  username: ciministry
+  username: <%= db_user %>
   password: <%= password %>
-  host: dbserver.powertochange.local
+  host: <%= db_host %>
 
 development:
   database: <%= database %>

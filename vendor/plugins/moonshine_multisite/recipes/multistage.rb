@@ -5,7 +5,10 @@ namespace :multistage do
   task :prepare_nested_locations do
     location = fetch(:stage_dir, "config/deploy")
     stages.each do |name|
-      FileUtils.mkdir_p(File.join(location, File.dirname(name)))
+      if (dirname = File.dirname(name.to_s)) != '.'
+        path = File.join(location, dirname)
+        FileUtils.mkdir_p path
+      end
     end
   end
 end

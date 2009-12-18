@@ -45,8 +45,7 @@ namespace :moonshine do
   DESC
   task :setup_directories do
     begin
-      config = YAML.load_file(File.join(Dir.pwd, 'config', 'moonshine.yml'))
-      put(YAML.dump(config),"/tmp/moonshine.yml")
+      put(YAML.dump(@moonshine_config),"/tmp/moonshine.yml")
     rescue Exception => e
       puts e
       puts "Please make sure the settings in moonshine.yml are valid and that the target hostname is correct."
@@ -149,31 +148,15 @@ end
 
 namespace :local_config do
 
-  # helper method that returns [ local_file, remote_file ] from an entry given for local_config
-  def extract_entry(entry)
-    if entry.class == Hash
-      local_file = entry.keys.first
-      remote_file = entry.values.first
-    elsif file.class == Array
-      filename = File.split(entry).last
-      local_file = entry
-      remote_file = "config/#{filename}"
-    end
-
-    [ local_file, remote_file ]
-  end
-
   desc <<-DESC
   Uploads local configuration files to the application's shared directory for
   later symlinking (if necessary). Called if local_config is set.
   DESC
   task :upload do
     fetch(:local_config,[]).each do |file|
-      local_file, remote_file = extract_local_config_entry(file)
-      if File.exist?( local_file )
-        parent.upload(local_file, "#{shared_path}/#{remote_file}")
-      else
-        puts "Warning: skipping missing local_config '#{local_file}'"
+      filename = File.split(file).last
+      if File.exist?( file )
+        parent.upload(file, "#{shared_path}/config/#{filename}")
       end
     end
   end
@@ -183,8 +166,8 @@ namespace :local_config do
   DESC
   task :symlink do
     fetch(:local_config,[]).each do |file|
-      local_file, remote_file = extract_local_config_entry(file)
-      run "ls #{latest_release}/#{remote_file} 2> /dev/null || ln -nfs #{shared_path}/#{remote_file} #{latest_release}/#{remote_file}"
+      filename = File.split(file).last
+      run "ls #{latest_release}/#{file} 2> /dev/null || ln -nfs #{shared_path}/config/#{filename} #{latest_release}/#{file}"
     end
   end
   

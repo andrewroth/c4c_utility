@@ -25,6 +25,7 @@
     private_user: deploy
     ssl: true
     ruby: ree187 
+    utility: /var/www/c4c_utility/current
   :p2c:
     user: deploy
     group: www-data
@@ -37,8 +38,7 @@
     private_user: deploy
     ssl: true
     ruby: ree187 
-    shared_config:
-<%= Dir["config/database.*"].collect{ |sc| "      - " + sc }.join("\n") %>
+    utility: /var/www/c4c_utility/current
     :db_names:
       :pat:
         :prod: summerprojecttool
@@ -61,6 +61,7 @@
     time_zone: EST
     ssl: false
     ruby: ree187 
+    utility: /var/www/c4c_utility/current
 
 :apps:
   :pat: git://github.com/andrewroth/project_application_tool.git

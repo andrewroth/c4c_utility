@@ -43,3 +43,22 @@ for_dbs(:klone) do |p|
     end
   end
 end
+
+for_dbs(:create) do |p|
+  desc "create #{p[:utopian]}"
+  task :"#{p[:stage]}" do
+    puts "[DBG] create #{p[:utopian]}"
+    #prepare_for_sql
+    #ActiveRecord::Base.connection.create_database(p[:utopian])
+  end
+
+  # define only once
+  if p[:stage] == multisite_config_hash[:stages].first
+    desc "create a database for all #{p[:server]} stages"
+    task :all do
+      multisite_config_hash[:stages].each do |stage|
+        Rake::Task["#{p[:app]}:create:#{p[:server]}:#{stage}"].invoke
+      end
+    end
+  end
+end

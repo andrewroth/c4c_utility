@@ -1,0 +1,25 @@
+defaults: &defaults
+  adapter: mysql
+  username: root
+  password: 
+  host: localhost
+
+development:
+  database: local.pulse.staging
+  <<: *defaults
+
+test:
+  database: local.pulse.test
+  <<: *defaults
+
+production:
+  database: local.pulse.staging
+  <<: *defaults
+
+ciministry_development:
+  database: local.intranet.staging
+  <<: *defaults
+
+ciministry_production:
+  database: local.intranet.staging
+  <<: *defaults
