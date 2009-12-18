@@ -1,7 +1,7 @@
 require "#{File.dirname(__FILE__)}/rake_helper.rb"
 
 def pull_db(app, server, stage, remote_db, local_db)
-  puts "[DBG] pull_db app=#{app} server=#{server} stage=#{stage} remote_db=#{remote_db} local_db=#{local_db}"
+  debug "[DBG] pull_db app=#{app} server=#{server} stage=#{stage} remote_db=#{remote_db} local_db=#{local_db}"
 =begin
   run_remote_utility_rake "#{app}:dump:#{server}:#{stage}"
   local_dump_path = "tmp/#{remote_db}.sql".gsub(File::SEPARATOR, File::ALT_SEPARATOR || File::SEPARATOR)

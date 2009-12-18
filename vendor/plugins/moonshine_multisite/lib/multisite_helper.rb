@@ -6,7 +6,7 @@ def utopian_db_name(server, app, stage)
 end
 
 def legacy_db_name(server, app, stage)
-  puts "[DBG] legacy_db_name server=#{server} app=#{app} stage=#{stage}"
+  debug "[DBG] legacy_db_name server=#{server} app=#{app} stage=#{stage}"
   hash_path = [ :servers, server.to_sym, :db_names, app.to_sym, stage.to_sym ]
   path_so_far = multisite_config_hash
   for next_segment in hash_path
@@ -30,7 +30,7 @@ end
 # Also sets @moonshine_config as a hash of moonshine values (similar to what
 # would be gotten from a moonshine.yml)
 def apply_moonshine_multisite_config(server, stage)
-  puts "[DBG] apply_moonshine_multisite_config server=#{server} stage=#{stage}"
+  debug "[DBG] apply_moonshine_multisite_config server=#{server} stage=#{stage}"
   domain = multisite_config_hash[:servers][server.to_sym][:domain]
   # give some nice defaults
   @moonshine_config = {

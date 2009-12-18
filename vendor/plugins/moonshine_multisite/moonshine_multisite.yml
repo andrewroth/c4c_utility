@@ -26,6 +26,15 @@
     ssl: true
     ruby: ree187 
     utility: /var/www/c4c_utility/current
+    :db_names:
+      :pulse:
+        :prod: pulse
+        :dev: moose
+        :staging: emu
+      :intranet:
+        :prod: ciministry
+        :dev: dev_campusforchrist
+        :staging: dev_campusforchrist
   :p2c:
     user: deploy
     group: www-data
@@ -44,14 +53,6 @@
         :prod: summerprojecttool
         :dev: spt_dev
         :staging: spt_dev
-      :pulse:
-        :prod: pulse
-        :dev: moose
-        :staging: emu
-      :intranet:
-        :prod: ciministry
-        :dev: dev_campusforchrist
-        :staging: dev_campusforchrist
   :local:
     user: deploy
     group: www-data
