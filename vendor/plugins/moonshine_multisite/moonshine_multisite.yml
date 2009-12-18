@@ -43,7 +43,7 @@
       :pat:
         :prod: summerprojecttool
         :dev: spt_dev
-        :staging: 
+        :staging: spt_dev
       :pulse:
         :prod: pulse
         :dev: moose

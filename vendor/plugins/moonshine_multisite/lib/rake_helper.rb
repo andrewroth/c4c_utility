@@ -129,3 +129,8 @@ def query_databases
   rescue
   end
 end
+
+def debug(stmt)
+  puts stmt
+end
+

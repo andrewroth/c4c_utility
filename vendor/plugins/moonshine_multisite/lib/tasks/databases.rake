@@ -62,3 +62,16 @@ for_dbs(:create) do |p|
     end
   end
 end
+
+namespace :create do
+  namespace :all do
+    multisite_config_hash[:servers].keys.each do |server|
+      desc "create all databases for #{server}"
+      task server do
+        multisite_config_hash[:apps].keys.each do |app|
+          Rake::Task["#{app}:create:#{server}:all"].invoke
+        end
+      end
+    end
+  end
+end
