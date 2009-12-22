@@ -85,8 +85,7 @@ def execute_sql(command)
 
   for c in command.split(';')
     puts "[SQL] #{c.lstrip.rstrip}"
-    STDIN.gets
-    @sql.execute c
+    #@sql.execute c
   end
 end
 
@@ -97,8 +96,7 @@ end
 
 def execute_shell(command)
   puts "[SH ] #{command}"
-  STDIN.gets
-  system command
+  #system command
 end
 
 def for_dbs(action)
@@ -131,6 +129,6 @@ def query_databases
 end
 
 def debug(stmt)
-  puts stmt
+  #puts stmt
 end
 

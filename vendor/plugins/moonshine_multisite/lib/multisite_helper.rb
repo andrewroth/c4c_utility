@@ -31,6 +31,7 @@ end
 # would be gotten from a moonshine.yml)
 def apply_moonshine_multisite_config(server, stage)
   debug "[DBG] apply_moonshine_multisite_config server=#{server} stage=#{stage}"
+  return false if multisite_config_hash[:servers][server.to_sym].nil?
   domain = multisite_config_hash[:servers][server.to_sym][:domain]
   # give some nice defaults
   @moonshine_config = {
@@ -59,6 +60,7 @@ def apply_moonshine_multisite_config(server, stage)
   end
   set :server_only, server
   set :moonshine_config, @moonshine_config
+  return true
 end
 
 # Assumes that your capistrano-ext stages are actually in "host/stage", then
