@@ -23,5 +23,5 @@ def run_remote_rake(rake_cmd, path = current_path)
   rake = fetch(:rake, "rake")
   rails_env = fetch(:rails_env, "production")
   puts "[RUN] cd #{path} && #{rake} RAILS_ENV=#{rails_env} #{rake_cmd.split(',').join(' ')}"
-  #run "cd #{path} && #{rake} RAILS_ENV=#{rails_env} #{rake_cmd.split(',').join(' ')}"
+  run "cd #{path} && #{rake} RAILS_ENV=#{rails_env} #{rake_cmd.split(',').join(' ')}"
 end
