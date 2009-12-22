@@ -7,7 +7,7 @@ def pull_db(app, server, stage, remote_db, local_db)
   utopian = utopian_db_name(server, app, stage)
   local_dump_path = "tmp/#{utopian}.sql".gsub(File::SEPARATOR, File::ALT_SEPARATOR || File::SEPARATOR)
   remote_dump_path = "#{fetch(:utility)}/tmp/#{utopian}.sql"
-  puts remote_dump_path+'.gz', local_dump_path+'.gz' 
+  download remote_dump_path+'.gz', local_dump_path+'.gz' 
   gunzip = Kernel.is_windows? ? File.join(File.dirname(__FILE__), '..', 'windows', 'gzip', 'gunzip.exe') : 'gunzip'
   execute_shell "#{gunzip} #{local_dump_path}.gz -f"
   load_dump local_dump_path, local_db

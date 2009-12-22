@@ -85,7 +85,7 @@ def execute_sql(command)
 
   for c in command.split(';')
     puts "[SQL] #{c.lstrip.rstrip}"
-    #@sql.execute c
+    @sql.execute c
   end
 end
 
@@ -96,7 +96,7 @@ end
 
 def execute_shell(command)
   puts "[SH ] #{command}"
-  #system command
+  system command
 end
 
 def for_dbs(action)
