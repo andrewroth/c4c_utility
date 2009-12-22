@@ -38,8 +38,8 @@ namespace :pull do
 
       namespace :to do
         multisite_config_hash[:servers].keys.each do |to_server|
-          desc "dumps #{app} remotely, downloads it, and loads locally, using #{to_server} naming (leave stage out to pull all stages)"
           namespace to_server do
+            desc "dumps #{app} remotely, downloads it, and loads locally, using #{to_server} naming (leave stage out to pull all stages)"
             task :default do
               if fetch(:stage_only, nil)
                 set(:app, app)
@@ -52,6 +52,7 @@ namespace :pull do
               end
             end
 
+            desc "dumps #{app} remotely, downloads it, and loads locally, using #{to_server} utopian naming (leave stage out to pull all stages)"
             task :utopian do
               set(:utopian_override, true)
               default
@@ -92,6 +93,7 @@ namespace :pull do
       end
     end
 
+    desc "pulls all apps and stages using utopian naming"
     task :utopian do
       set(:utopian_override, true)
       default
@@ -110,6 +112,7 @@ namespace :pull do
               find_and_execute_task "pull:#{app}:to:#{to_server}"
             end
           end
+          desc "pulls all apps and stages using #{to_server} utopian naming"
           task :utopian do
             set(:utopian_override, true)
             default

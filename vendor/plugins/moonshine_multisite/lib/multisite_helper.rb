@@ -34,12 +34,19 @@ def apply_moonshine_multisite_config(server, stage)
   domain = multisite_config_hash[:servers][server.to_sym][:domain]
   # give some nice defaults
   @moonshine_config = {
+    :application => fetch(:application), # needs to be in @moonshine_config to be uploaded
     :server_only => server,
     :repository => multisite_config_hash[:apps][fetch(:application).to_sym],
     :scm => if (!! repository =~ /^svn/) then :svn else :git end,
     :branch => (stage ? "#{server}.#{stage}" : nil)
   }
   @moonshine_config.merge! multisite_config_hash[:servers][server.to_sym]
+  # TODO: figure out why I need to do these next lines, after the defaults again.... :S
+  #   I think it was getting overridden somehow.. but I don't know where I was seeing it.
+  @moonshine_config.merge!({
+    # TODO: switch everything in the config to symbols
+    :deploy_to => "/var/www/#{fetch(:application)}.#{stage}.#{@moonshine_config['domain']}",
+  })
   # tie the multisite_config_hash back to the instance variabled one
   multisite_config_hash[:servers][server.to_sym] = @moonshine_config
   @moonshine_config.each do |key, value|
@@ -51,8 +58,7 @@ def apply_moonshine_multisite_config(server, stage)
     set :stage_only, stage
   end
   set :server_only, server
-  set :deploy_to, deploy_to
-  @moonshine_config[:deploy_to] = deploy_to
+  set :moonshine_config, @moonshine_config
 end
 
 # Assumes that your capistrano-ext stages are actually in "host/stage", then

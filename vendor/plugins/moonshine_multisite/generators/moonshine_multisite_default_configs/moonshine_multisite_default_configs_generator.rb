@@ -10,11 +10,11 @@ class MoonshineMultisiteDefaultConfigsGenerator < Rails::Generator::Base
 
     STDOUT.print "Server filter (blank for all): "
     server_filter = STDIN.gets.chomp
-    STDOUT.print "DB User: "
-    db_user = STDIN.gets.chomp
     STDOUT.print "DB Host: " # TODO: put this in moonshine_multisite.yml
     db_host = STDIN.gets.chomp
-    STDOUT.print "Password: "
+    STDOUT.print "DB User: "
+    db_user = STDIN.gets.chomp
+    STDOUT.print "DB Password: "
     password = STDIN.gets.chomp
 
     record do |m|
@@ -39,7 +39,7 @@ class MoonshineMultisiteDefaultConfigsGenerator < Rails::Generator::Base
         end
         multisite_config_hash[:apps].keys.each do |app|
           multisite_config_hash[:stages].each do |stage|
-            utopian = "#{server}.#{app}.#{stage}"
+            utopian = "#{server}_#{app}_#{stage}"
             dest = "app/manifests/assets/#{visibility}/database_configs/database.#{utopian}.yml"
             if generate_private
               if config[:db_names] && config[:db_names][app] && config[:db_names][app][stage]
