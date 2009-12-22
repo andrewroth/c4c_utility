@@ -38,6 +38,7 @@ end
 
 deploy.task :after_symlink do
   link_shared 'config/database.yml'
+  link_shared 'config/database_root.yml'
   link_shared 'config/dbpw'
 end
 
