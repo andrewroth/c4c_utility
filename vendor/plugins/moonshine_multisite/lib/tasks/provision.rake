@@ -175,6 +175,7 @@ def provision(server, server_config, utopian)
     first = true # first time deploy:setup should run
     multisite_config_hash[:stages].each do |stage|
       cap_stage = "#{server}/#{stage}"
+      utopian_name = utopian_db_name(server, app, stage)
       debug "----------------------------- #{app.to_s.ljust(10, " ")} #{stage.to_s.ljust(10, " ")} ----------------------------"
       # update and make sure this app is supposed to go on this server
       if repo == '' || %x[git ls-remote #{repo} #{server}.#{stage}] == ''
@@ -200,10 +201,9 @@ def provision(server, server_config, utopian)
       end
 
       # copy the database file
-      @cap_config.set(:shared_config, (@cap_config.fetch(:shared_configs, []) + [ "config/database.yml", "config/database.#{server}.#{app}.#{stage}.yml", "config/moonshine.yml" ]).uniq)
-      database_config = "database.#{server}.#{app}.#{stage}.yml"
-      db_file = File.read(Rails.root.join("app/manifests/assets/#{utopian ? 'public' : 'private'}/database_configs/#{database_config}"))
-      @cap_config.put db_file, "#{@cap_config.fetch(:shared_path)}/config/#{database_config}"
+      #@cap_config.set(:shared_config, (@cap_config.fetch(:shared_configs, []) + [ "config/database.yml", "config/database.#{utopian_name}.yml", "config/moonshine.yml" ]).uniq)
+      @cap_config.set(:shared_config, (@cap_config.fetch(:shared_configs, []) + [ "config/database.yml", "config/moonshine.yml" ]).uniq)
+      db_file = File.read(Rails.root.join("app/manifests/assets/#{utopian ? 'public' : 'private'}/database_configs/database.#{utopian_name}.yml"))
       @cap_config.put db_file, "#{@cap_config.fetch(:shared_path)}/config/database.yml"
       @cap_config.put YAML::dump(@cap_config.fetch(:moonshine_config)), "#{@cap_config.fetch(:shared_path)}/config/moonshine.yml"
       run_cap cap_stage, "deploy"

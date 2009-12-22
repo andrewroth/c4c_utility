@@ -5,21 +5,21 @@ defaults: &defaults
   host: localhost
 
 development:
-  database: local.pulse.dev
+  database: p2c_pat_dev
   <<: *defaults
 
 test:
-  database: local.pulse.test
+  database: p2c_pat_test
   <<: *defaults
 
 production:
-  database: local.pulse.dev
+  database: p2c_pat_dev
   <<: *defaults
 
 ciministry_development:
-  database: local.intranet.dev
+  database: p2c_intranet_dev
   <<: *defaults
 
 ciministry_production:
-  database: local.intranet.dev
+  database: p2c_intranet_dev
   <<: *defaults

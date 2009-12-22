@@ -5,21 +5,21 @@ defaults: &defaults
   host: localhost
 
 development:
-  database: local.intranet.staging
+  database: local_pat_dev
   <<: *defaults
 
 test:
-  database: local.intranet.test
+  database: local_pat_test
   <<: *defaults
 
 production:
-  database: local.intranet.staging
+  database: local_pat_dev
   <<: *defaults
 
 ciministry_development:
-  database: local.intranet.staging
+  database: c4c_intranet_dev
   <<: *defaults
 
 ciministry_production:
-  database: local.intranet.staging
+  database: c4c_intranet_dev
   <<: *defaults

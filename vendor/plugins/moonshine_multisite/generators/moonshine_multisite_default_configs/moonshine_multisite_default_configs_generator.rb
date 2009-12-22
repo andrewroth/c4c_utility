@@ -1,12 +1,19 @@
 require File.dirname(__FILE__) + "/../../lib/multisite_helper.rb"
 
 class MoonshineMultisiteDefaultConfigsGenerator < Rails::Generator::Base
+
+  def generate_utopian
+    @generate_utopian
+  end
+
   def manifest
-    if ARGV.first == 'private'
+    if ARGV.first == 'utopian'
       ARGV.shift
-      generate_private = true
+      @generate_utopian = true
+    else
+      @generate_utopian = false
     end
-    visibility = generate_private ? 'private' : 'public'
+    visibility = @generate_private ? 'private' : 'public'
 
     STDOUT.print "Server filter (blank for all): "
     server_filter = STDIN.gets.chomp
@@ -22,13 +29,13 @@ class MoonshineMultisiteDefaultConfigsGenerator < Rails::Generator::Base
       m.directory "app/manifests/assets"
       m.directory "app/manifests/assets/#{visibility}"
       m.directory "app/manifests/assets/#{visibility}/database_configs"
-      unless generate_private
+      if @generate_utopian
         multisite_config_hash[:servers].each do |server, config|
           multisite_config_hash[:apps].keys.each do |app|
             multisite_config_hash[:stages].each do |stage|
               config[:db_names] ||= {}
               config[:db_names][app] ||= {}
-              config[:db_names][app][stage] ||= "#{server}.#{app}.#{stage}"
+              config[:db_names][app][stage] = utopian_db_name(server, app, stage)
             end
           end
         end
@@ -39,9 +46,9 @@ class MoonshineMultisiteDefaultConfigsGenerator < Rails::Generator::Base
         end
         multisite_config_hash[:apps].keys.each do |app|
           multisite_config_hash[:stages].each do |stage|
-            utopian = "#{server}_#{app}_#{stage}"
+            utopian = utopian_db_name(server, app, stage)
             dest = "app/manifests/assets/#{visibility}/database_configs/database.#{utopian}.yml"
-            if generate_private
+            unless @generate_utopian
               if config[:db_names] && config[:db_names][app] && config[:db_names][app][stage]
                 database = config[:db_names][app][stage]
               else
