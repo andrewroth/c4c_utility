@@ -4,11 +4,11 @@ require "#{File.dirname(__FILE__)}/../lib/cap_helper.rb"
 namespace :pull do
   task :set_remote_db do
     debug "[DBG] set_remote_db server_only=#{fetch(:server_only)} stage=#{fetch(:stage_only)} app=#{fetch(:app)}"
-    #set(:utopian, utopian_db_name(fetch(:server_only), fetch(:app), fetch(:stage_only)))
-    set(:legacy, legacy_db_name(fetch(:server_only), fetch(:app), fetch(:stage_only)))
+    set(:remote_utopian, utopian_db_name(fetch(:server_only), fetch(:app), fetch(:stage_only)))
+    set(:remote_legacy, legacy_db_name(fetch(:server_only), fetch(:app), fetch(:stage_only)))
     #set(:remote_db, fetch(:legacy) || fetch(:utopian))
-    set(:remote_db, fetch(:legacy))
-    debug "[DBG] set_remote_db legacy=#{fetch(:legacy)} app=#{fetch(:app)}"
+    set(:remote_db, fetch(:remote_legacy))
+    debug "[DBG] set_remote_db legacy=#{fetch(:remote_legacy)} app=#{fetch(:app)}"
   end
   task :set_local_db do
     debug "[DBG] set_local_db app=#{fetch(:app)}"
@@ -32,7 +32,7 @@ namespace :pull do
           set_remote_db
           if fetch(:remote_db, nil)
             set_local_db
-            pull_db app, fetch(:server_only), fetch(:stage_only), fetch(:remote_db), fetch(:local_db)
+            pull_db app, fetch(:server_only), fetch(:stage_only), fetch(:remote_utopian), fetch(:local_db)
           end
         else
           find_and_execute_task "pull:#{app}:all"

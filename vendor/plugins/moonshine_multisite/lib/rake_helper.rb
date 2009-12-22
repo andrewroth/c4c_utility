@@ -1,8 +1,8 @@
 def root_config
   return @root_config if @root_config
   file_plugin = File.join(File.dirname(__FILE__), '..', 'config', 'database_root.yml')
-  #file_root = File.join(File.dirname(__FILE__), '/../../../../', 'config', 'database_root.yml')
-  file_root = File.join(Rails.root.join('config', 'database_root.yml'))
+  file_root = File.join(File.dirname(__FILE__), '/../../../../', 'config', 'database_root.yml')
+  #file_root = File.join(Rails.root.join('config', 'database_root.yml'))
   if File.exists?(file_plugin)
     file_found = file_plugin
   elsif File.exists?(file_root)
@@ -39,7 +39,7 @@ end
 #
 # :prod => <name of production database>
 # :dev => <name of development database to copy prod to> OR 
-#         :file boolean, which dumps to tmp/:prod>
+#         :file filename string, to dump to in tmp dir
 ## production will be clone to development
 # 
 def clone(params)
@@ -57,7 +57,7 @@ def clone(params)
   options = "--extended-insert --skip-lock-tables --skip-add-locks  --skip-set-charset --skip-disable-keys"
 
   if file
-    dest = "| gzip > #{Rails.root.join("tmp/#{prod}.sql.gz")}"
+    dest = "| gzip > #{Rails.root.join("tmp/#{file}")}"
   else
     dest = "| mysql -h #{dbserver} -u #{dbuser} --password=#{dbpass} #{dev}"
     unless @databases && @databases.include?(dev)
