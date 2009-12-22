@@ -2,7 +2,7 @@ require 'yaml'
 require 'erb'
 
 def utopian_db_name(server, app, stage)
-  "#{server || 'server'}.#{app || 'app'}.#{stage || 'stage'}"
+  "#{server || 'server'}_#{app || 'app'}_#{stage || 'stage'}"
 end
 
 def legacy_db_name(server, app, stage)
