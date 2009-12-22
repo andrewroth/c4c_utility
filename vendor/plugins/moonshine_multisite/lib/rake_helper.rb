@@ -30,8 +30,8 @@ def load_dump(dump, db)
   throw "Overwriting production database detected! db: #{db}" if %w(summerprojecttool emu ciministry).include?(db.to_s)
   execute_sql "DROP DATABASE IF EXISTS #{db}; CREATE DATABASE #{db}"
   output_command = Kernel.is_windows? ? 'type' : 'cat'
-  username = root_config['username']
-  password = root_config['password']
+  username = root_config[:username]
+  password = root_config[:password]
   execute_shell "#{output_command} #{dump} | mysql --user #{username} #{db} --password=#{password}"
 end
 
