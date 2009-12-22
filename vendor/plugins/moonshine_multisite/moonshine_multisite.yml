@@ -25,7 +25,7 @@
     private_user: deploy
     ssl: true
     ruby: ree187 
-    utility: /var/www/c4c_utility/current
+    utility: /var/www/c4c_utility.campusforchrist.org/current
     :db_names:
       :pulse:
         :prod: pulse
@@ -47,7 +47,7 @@
     private_user: deploy
     ssl: true
     ruby: ree187 
-    utility: /var/www/c4c_utility/current
+    utility: /var/www/c4c_utility.campusforchrist.org/current
     :db_names:
       :pat:
         :prod: summerprojecttool
