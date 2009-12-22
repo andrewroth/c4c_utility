@@ -57,7 +57,7 @@ def clone(params)
   options = "--extended-insert --skip-lock-tables --skip-add-locks  --skip-set-charset --skip-disable-keys"
 
   if file
-    dest = "| gzip > #{Rails.root.join("tmp/#{file}")}"
+    dest = "| gzip > #{Rails.root.join(file)}"
   else
     dest = "| mysql -h #{dbserver} -u #{dbuser} --password=#{dbpass} #{dev}"
     unless @databases && @databases.include?(dev)
