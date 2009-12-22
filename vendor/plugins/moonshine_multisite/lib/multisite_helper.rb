@@ -42,6 +42,10 @@ def apply_moonshine_multisite_config(server, stage)
     :branch => (stage ? "#{server}.#{stage}" : nil)
   }
   @moonshine_config.merge! multisite_config_hash[:servers][server.to_sym]
+  # allow overriding from env
+  @moonshine_config.each do |key, value|
+    @moonshine_config[key] = ENV[key.to_s] if ENV[key.to_s]
+  end
   # TODO: figure out why I need to do these next lines, after the defaults again.... :S
   #   I think it was getting overridden somehow.. but I don't know where I was seeing it.
   @moonshine_config.merge!({
@@ -51,7 +55,7 @@ def apply_moonshine_multisite_config(server, stage)
   # tie the multisite_config_hash back to the instance variabled one
   multisite_config_hash[:servers][server.to_sym] = @moonshine_config
   @moonshine_config.each do |key, value|
-    set(key.to_sym, value)
+    set(key.to_sym, ENV[key.to_s] || value)
   end
   if stage
     # don't set any stage unless given, to give error on tasks that should have it
