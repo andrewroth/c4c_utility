@@ -14,7 +14,13 @@ namespace :moonshine do
       multisite_config_hash[:servers].each do |server, server_config|
         desc "Provision the #{server} server"
         task server do
-          provision(server, server_config, :nothing, false)
+          provision(server, server_config, false)
+        end
+        namespace server do
+          desc "Provision the #{server} server"
+          task :utopian do
+            provision(server, server_config, true)
+          end
         end
 =begin
         namespace server do
@@ -127,6 +133,8 @@ def cap_upload_certs(stage)
 end
 =end
 
+# TODO: all these comments are out of date now
+#
 # :database_mode: is one of
 #
 # :vanilla
@@ -153,8 +161,8 @@ end
 # setting up a local computer for development and would prefer the consistent names.
 #
 #
-def provision(server, server_config, database_mode, utopian, db_source = nil)
-  debug "[DBG] setup #{server} database=#{database_mode} utopian=#{utopian}"
+def provision(server, server_config, utopian)
+  debug "[DBG] setup #{server} utopian=#{utopian}"
   debug "[DBG] config #{server_config.inspect}"
   tmp_dir = "#{RAILS_ROOT}/tmp"
   first_app = true
