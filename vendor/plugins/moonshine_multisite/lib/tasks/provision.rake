@@ -2,7 +2,10 @@ MOONSHINE_MULTISITE_ROOT = "#{File.dirname(__FILE__)}/../.."
 RAILS_ROOT = "#{MOONSHINE_MULTISITE_ROOT}/../../.."
 require MOONSHINE_MULTISITE_ROOT + '/lib/multisite_helper.rb'
 
-require 'capistrano/cli'
+begin # some servers don't like this, don't know why
+  require 'capistrano/cli'
+rescue MissingSourceFile => ex
+end
 require 'ftools'
 
 namespace :moonshine do
