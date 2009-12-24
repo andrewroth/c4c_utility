@@ -144,12 +144,7 @@ class Moonshine::Manifest < ShadowPuppet::Manifest
   end
 
   # database config
-  if defined?(Rails)
-    db_config = Rails::configuration.database_configuration_file.to_s
-  else
-    db_config = File.join(rails_root, 'config', 'database.yml')
-  end
-  configure(:database => YAML::load(ERB.new(IO.read(db_config))).result)
+  configure(:database => YAML::load(ERB.new(IO.read(File.join(rails_root, 'config', 'database.yml'))).result))
 
   # gems
   configure(:gems => (YAML.load_file(File.join(rails_root, 'config', 'gems.yml')) rescue nil))
