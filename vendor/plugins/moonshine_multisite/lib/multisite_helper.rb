@@ -44,8 +44,20 @@ def apply_moonshine_multisite_config(server, stage)
   @moonshine_config.merge! multisite_config_hash[:servers][server.to_sym]
   # allow overriding from env
   @moonshine_config.each do |key, value|
-    @moonshine_config[key] = ENV[key.to_s] if ENV[key.to_s]
+    if ENV[key.to_s]
+      case ENV[key.to_s]
+      when 'true'
+        env_value = true
+      when 'false'
+        env_value = false
+      else
+        env_value = ENV[key.to_s]
+      end
+
+      @moonshine_config[key] = env_value
+    end
   end
+
   # TODO: figure out why I need to do these next lines, after the defaults again.... :S
   #   I think it was getting overridden somehow.. but I don't know where I was seeing it.
   @moonshine_config.merge!({
