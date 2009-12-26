@@ -86,7 +86,7 @@ def run_shell_forked(cmd)
   Process.wait
 end
 
-def new_cap(stage)
+def new_cap(stage, utopian)
   # save password
   if @cap_config
     @password = @cap_config.fetch(:password)
@@ -99,6 +99,7 @@ def new_cap(stage)
   else
     @cap_config.set(:password) { Capistrano::CLI.password_prompt }
   end
+  @cap_config.set(:utopian_override, utopian)
   @cap_config.load "Capfile"
   #@cap_config.load "config/deploy"
   #@cap_config.load :file => "/opt/local/lib/ruby/gems/1.8/gems/capistrano-ext-1.2.1/lib/capistrano/ext/multistage.rb"
@@ -188,7 +189,7 @@ def provision(server, server_config, utopian)
         next
       end
 =end
-      new_cap cap_stage
+      new_cap cap_stage, utopian
       # deploy
       server_moonshine_folder = "#{app_root}/config/deploy/#{server}"
       stage_moonshine_file = "#{server_moonshine_folder}/#{stage}_moonshine.yml"

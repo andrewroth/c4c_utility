@@ -14,45 +14,91 @@
 
 :servers:
   :c4c:
-    user: deploy
-    group: www-data
-    server: pat.powertochange.org
-    lan_ip: 192.168.1.112
-    domain: campusforchrist.org
-    time_zone: PST
-    private_path: /home/deploy/private_repo2
-    private_host: 208.87.54.217
-    private_user: deploy
-    ssl: true
-    ruby: ree187 
-    utility: /var/www/c4c_utility.campusforchrist.org/current
-    :db_names:
+    :moonshine:
+      :user: deploy
+      :group: www-data
+      :server: pat.powertochange.org
+      :lan_ip: 192.168.1.112
+      :domain: campusforchrist.org
+      :time_zone: PST
+      :private_path: /home/deploy/private_repo2
+      :private_host: 208.87.54.217
+      :private_user: deploy
+      :ssl: true
+      :ruby: ree187 
+      :utility: /var/www/c4c_utility.campusforchrist.org/current
+    :stage_moonshines:
       :pulse:
-        :prod: pulse
-        :dev: moose
-        :staging: emu
+        :prod: 
+          :db_name: pulse
+          :server_name: pulse.campusforchrist.org
+        :dev: 
+          :db_name: moose
+          :server_name: pat.dev.campusforchrist.org
+          :application_aliases:
+            - moose.campusforchrist.org
+        :staging: 
+          :db_name: emu
+          :server_name: pat.staging.powertochange.org
       :intranet:
-        :prod: ciministry
-        :dev: dev_campusforchrist
-        :staging: dev_campusforchrist
+        :prod:
+          :db_name: ciministry
+        :dev:
+          :db_name: dev_campusforchrist
+        :staging:
+          :db_name: dev_campusforchrist
+    :local:
+      :moonshine:
+        :domain: local
+      :stage_moonshines:
+        :pulse:
+          :prod: 
+            :db_name: c4c_pulse_prod
+            :server_name: pulse.campusforchrist.org
+          :dev: 
+            :db_name: c4c_pulse_dev
+            :server_name: pat.dev.local
+            :application_aliases:
+              - moose.local
+          :staging: 
+            :db_name: emu
+            :server_name: pat.staging.powertochange.org
   :p2c:
-    user: deploy
-    group: www-data
-    server: pat.powertochange.org
-    lan_ip: 192.168.1.112
-    domain: powertochange.org
-    time_zone: PST
-    private_path: /home/deploy/private_repo2
-    private_host: 208.87.54.217
-    private_user: deploy
-    ssl: true
-    ruby: ree187 
-    utility: /var/www/c4c_utility.campusforchrist.org/current
-    :db_names:
+    :moonshine:
+      :user: deploy
+      :group: www-data
+      :server: pat.powertochange.org
+      :lan_ip: 192.168.1.112
+      :domain: powertochange.org
+      :time_zone: PST
+      :private_path: /home/deploy/private_repo2
+      :private_host: 208.87.54.217
+      :private_user: deploy
+      :ssl: true
+      :ruby: ree187 
+      :utility: /var/www/c4c_utility.campusforchrist.org/current
+    :stage_moonshines:
       :pat:
-        :prod: summerprojecttool
-        :dev: spt_dev
-        :staging: spt_dev
+        :prod: 
+          :db_name: summerprojecttool
+          :server_name: pat.powertochange.org
+        :dev: 
+          :db_name: spt_dev
+          :server_name: pat.dev.powertochange.org
+        :staging: 
+          :db_name: spt_dev
+          :server_name: pat.staging.powertochange.org
+    :local:
+      :moonshine:
+        :domain: local
+      :stage_moonshines:
+        :pat:
+          :staging:
+            :db_name: p2c_pat_staging
+          :dev:
+            :db_name: p2c_pat_dev
+            :server_name: pat.local
+            :deploy_to: /var/www/pat.local
 :apps:
   :pat: git://github.com/andrewroth/project_application_tool.git
   :pulse: git://github.com/twinge/ministry-tracker.git

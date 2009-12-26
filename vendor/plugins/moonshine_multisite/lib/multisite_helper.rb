@@ -7,8 +7,12 @@ end
 
 def legacy_db_name(server, app, stage)
   debug "[DBG] legacy_db_name server=#{server} app=#{app} stage=#{stage}"
-  hash_path = [ :servers, server.to_sym, :db_names, app.to_sym, stage.to_sym ]
-  path_so_far = multisite_config_hash
+  hash_path = [ :servers, server.to_sym, :stage_moonshines, app.to_sym, stage.to_sym, :db_name ]
+  traverse_hash(multisite_config_hash, hash_path)
+end
+
+def traverse_hash(hash, hash_path)
+  path_so_far = hash
   for next_segment in hash_path
     if path_so_far[next_segment]
       path_so_far = path_so_far[next_segment]
@@ -16,7 +20,7 @@ def legacy_db_name(server, app, stage)
       return nil
     end
   end
-  path_so_far
+  return path_so_far
 end
 
 def multisite_config_hash
@@ -30,6 +34,48 @@ end
 # Also sets @moonshine_config as a hash of moonshine values (similar to what
 # would be gotten from a moonshine.yml)
 def apply_moonshine_multisite_config(server, stage)
+  server = server.to_sym
+  stage = stage.to_sym unless stage.nil?
+  app = fetch(:application).to_sym
+
+  debug "[DBG] apply_moonshine_multisite_config server=#{server} stage=#{stage}"
+  return false if multisite_config_hash[:servers][server.to_sym].nil?
+  
+  @moonshine_config = {}
+  @moonshine_config.merge!(traverse_hash(multisite_config_hash, [ :servers, server, :moonshine ]) || {})
+  puts "utopian override: #{fetch(:utopian_override, false)}"
+  if fetch(:utopian_override, false)
+    @moonshine_config.merge!(traverse_hash(multisite_config_hash, [ :servers, server, :local, :moonshine ]) || {})
+    puts traverse_hash(multisite_config_hash, [ :servers, server, :local, :moonshine ]).inspect
+    @moonshine_config.merge!(traverse_hash(multisite_config_hash, [ :servers, server, :local, :stage_moonshines, app, stage ]) || {})
+  else
+    @moonshine_config.merge!(traverse_hash(multisite_config_hash, [ :servers, server, :stage_moonshines, app, stage ]) || {})
+  end
+
+  # useful to know the server and stage later on
+  @moonshine_config[:server_only] = server
+  @moonshine_config[:stage_only] = stage
+
+  # give some defaults
+  @moonshine_config[:repository] ||= multisite_config_hash[:apps][app]
+  @moonshine_config[:repository] ||= (@moonshine_config[:repository] =~ /^svn/ ? :svn : :git)
+  @moonshine_config[:branch] ||= (stage ? "#{server}.#{stage}" : nil)
+
+  # set cap values
+  @moonshine_config.each do |key, value|
+    set(key.to_sym, ENV[key.to_s] || value)
+  end
+
+  set(:moonshine_config, @moonshine_config)
+
+  puts @moonshine_config.inspect
+  return true
+end
+
+ # Sets the key and values in capistrano from the moonshine multisite config
+# Also sets @moonshine_config as a hash of moonshine values (similar to what
+# would be gotten from a moonshine.yml)
+def apply_moonshine_multisite_config2(server, stage)
   debug "[DBG] apply_moonshine_multisite_config server=#{server} stage=#{stage}"
   return false if multisite_config_hash[:servers][server.to_sym].nil?
   domain = multisite_config_hash[:servers][server.to_sym][:domain]
