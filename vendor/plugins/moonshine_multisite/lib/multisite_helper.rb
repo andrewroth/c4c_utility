@@ -60,6 +60,7 @@ def apply_moonshine_multisite_config(server, stage)
   @moonshine_config[:repository] ||= multisite_config_hash[:apps][app]
   @moonshine_config[:repository] ||= (@moonshine_config[:repository] =~ /^svn/ ? :svn : :git)
   @moonshine_config[:branch] ||= (stage ? "#{server}.#{stage}" : nil)
+  @moonshine_config[:application] ||= fetch(:application)
 
   # set cap values
   @moonshine_config.each do |key, value|
