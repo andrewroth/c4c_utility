@@ -50,6 +50,7 @@
     :local:
       :moonshine:
         :domain: local
+        :ssl: false
       :stage_moonshines:
         :pulse:
           :prod: 
@@ -91,6 +92,7 @@
     :local:
       :moonshine:
         :domain: local
+        :ssl: false
       :stage_moonshines:
         :pat:
           :staging:

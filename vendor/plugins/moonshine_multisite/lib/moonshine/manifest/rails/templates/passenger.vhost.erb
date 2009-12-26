@@ -8,10 +8,10 @@
 </VirtualHost>
 <% end %>
 
-<% if configuration[:sll] %>
-<VirtualHost *:80>
-<% else %>
+<% if configuration[:ssl] %>
 <VirtualHost <%= configuration[:lan_ip] %>:443>
+<% else %>
+<VirtualHost *:80>
 <% end %>
   ServerName <%= configuration[:application] %>
 <% if configuration[:application_aliases] %>
