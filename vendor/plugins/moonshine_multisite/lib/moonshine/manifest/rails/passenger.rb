@@ -63,7 +63,7 @@ module Moonshine::Manifest::Rails::Passenger
       :require => exec("a2enmod passenger")
 
     a2dissite '000-default', :require => file("passenger_vhost")
-    a2ensite configuration[:application], :require => file("passenger_vhost")
+    a2ensite configuration[:server_name], :require => file("passenger_vhost")
   end
 
   def passenger_configure_gem_path
