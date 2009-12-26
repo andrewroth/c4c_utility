@@ -62,6 +62,22 @@ def apply_moonshine_multisite_config(server, stage)
   @moonshine_config[:branch] ||= (stage ? "#{server}.#{stage}" : nil)
   @moonshine_config[:application] ||= fetch(:application)
 
+  # allow overriding from env
+  @moonshine_config.each do |key, value|
+    if ENV[key.to_s]
+      case ENV[key.to_s]
+      when 'true'
+        env_value = true
+      when 'false'
+        env_value = false
+      else
+        env_value = ENV[key.to_s]
+      end
+
+      @moonshine_config[key] = env_value
+    end
+  end
+
   # set cap values
   @moonshine_config.each do |key, value|
     set(key.to_sym, ENV[key.to_s] || value)
