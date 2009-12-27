@@ -29,13 +29,13 @@ for_dbs(:load) do |p|
   if p[:legacy]
     desc "loads tmp/#{p[:utopian]}.sql.gz to #{p[:legacy]} database"
     task :"#{p[:stage]}" do
-      load_dump("#{p[:utopian]}.sql", p[:legacy])
+      load_dump("tmp/#{p[:utopian]}.sql", p[:legacy])
     end
   end
   namespace :"#{p[:stage]}" do
     desc "loads tmp/#{p[:utopian]}.sql.gz to #{p[:utopian]} database"
     task :utopian do
-      load_dump("#{p[:utopian]}.sql", p[:utopian])
+      load_dump("tmp/#{p[:utopian]}.sql", p[:utopian])
     end
   end
 end
