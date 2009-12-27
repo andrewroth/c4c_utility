@@ -24,6 +24,21 @@ for_dbs(:klone) do |p|
   end
 end
 
+for_dbs(:load) do |p|
+  if p[:legacy]
+    desc "loads tmp/#{p[:utopian]}.sql.gz to #{p[:legacy] database}"
+    task :"#{p[:utopian]}" do
+      load_dump("#{p[:utopian]}.sql", p[:legacy])
+    end
+  end
+  namespace :utopian do
+    desc "loads tmp/#{p[:utopian]}.sql.gz to #{p[:utopian] database}"
+    task :utopian do
+      load_dump("#{p[:utopian]}.sql", p[:utopian])
+    end
+  end
+end
+
 for_dbs(:create) do |p|
   if p[:legacy] && p[:legacy] != ''
     desc "create #{p[:legacy]}"
