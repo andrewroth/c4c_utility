@@ -1,5 +1,6 @@
 require "#{File.dirname(__FILE__)}/../../lib/rake_helper.rb"
 require "#{File.dirname(__FILE__)}/../../lib/multisite_helper.rb"
+require "#{File.dirname(__FILE__)}/../../lib/detect_windows.rb"
 
 query_databases
 @master_stage = multisite_config_hash[:stages].first
@@ -26,13 +27,13 @@ end
 
 for_dbs(:load) do |p|
   if p[:legacy]
-    desc "loads tmp/#{p[:utopian]}.sql.gz to #{p[:legacy] database}"
-    task :"#{p[:utopian]}" do
+    desc "loads tmp/#{p[:utopian]}.sql.gz to #{p[:legacy]} database"
+    task :"#{p[:stage]}" do
       load_dump("#{p[:utopian]}.sql", p[:legacy])
     end
   end
-  namespace :utopian do
-    desc "loads tmp/#{p[:utopian]}.sql.gz to #{p[:utopian] database}"
+  namespace :"#{p[:stage]}" do
+    desc "loads tmp/#{p[:utopian]}.sql.gz to #{p[:utopian]} database"
     task :utopian do
       load_dump("#{p[:utopian]}.sql", p[:utopian])
     end
