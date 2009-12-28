@@ -204,7 +204,11 @@ def provision(server, server_config, utopian)
       # copy the database file
       #@cap_config.set(:shared_config, (@cap_config.fetch(:shared_configs, []) + [ "config/database.yml", "config/database.#{utopian_name}.yml", "config/moonshine.yml" ]).uniq)
       @cap_config.set(:shared_config, (@cap_config.fetch(:shared_configs, []) + [ "config/database.yml", "config/moonshine.yml" ]).uniq)
-      db_file = File.read(Rails.root.join("app/manifests/assets/#{utopian ? 'public' : 'private'}/database_configs/database.#{utopian_name}.yml"))
+      if utopian
+        db_file = File.read(File.join(MOONSHINE_MULTISITE_ROOT, "/app/manifests/assets/database_configs/database.#{utopian_name}.yml"))
+      else
+        db_file = File.read(Rails.root.join("/app/manifests/assets/private/database_configs/database.#{utopian_name}.yml"))
+      end
       @cap_config.put db_file, "#{@cap_config.fetch(:shared_path)}/config/database.yml"
       @cap_config.put YAML::dump(@cap_config.fetch(:moonshine_config)), "#{@cap_config.fetch(:shared_path)}/config/moonshine.yml"
       run_cap cap_stage, "deploy"
