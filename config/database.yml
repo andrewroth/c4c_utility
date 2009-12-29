@@ -1,4 +1,0 @@
-development:
-  adapter: mysql
-
-production:
