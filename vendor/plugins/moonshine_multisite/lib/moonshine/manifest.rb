@@ -2,16 +2,15 @@
 # for loading moonshine recpies from plugins, a template helper, and parses
 # several configuration files:
 #
-#   vendor/plugins/moonshine_multisite/moonshine_multisite.yml
+#   config/moonshine.yml
 #
-# See <tt>recipes/multisite.rb</tt> for how the moonshine_multisite.yml is
-# loaded in to Configatron::Store.
+# The contents of <tt>config/moonshine.yml</tt> are expected to serialize into
+# a hash, and are loaded into the manifest's Configatron::Store.
 #
 #   config/database.yml
 #
 # The contents of your database config are parsed and are available at
-# <tt>configuration[:database]</tt>.  The database file can be changed with
-# Rails::Configuration.database_configuration_file.
+# <tt>configuration[:database]</tt>.
 #
 # If you'd like to create another 'default rails stack' using other tools that
 # what Moonshine::Manifest::Rails uses, subclass this and go nuts.

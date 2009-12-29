@@ -86,7 +86,7 @@ def run_shell_forked(cmd)
   Process.wait
 end
 
-def new_cap(stage, utopian)
+def new_cap(server, app, stage, utopian)
   # save password
   if @cap_config
     @password = @cap_config.fetch(:password)
@@ -99,8 +99,9 @@ def new_cap(stage, utopian)
   else
     @cap_config.set(:password) { Capistrano::CLI.password_prompt }
   end
-  @cap_config.set(:utopian_override, utopian)
   @cap_config.load "Capfile"
+  @cap_config.set(:utopian_override, utopian)
+  @cap_config.set(:application, app)
   #@cap_config.load "config/deploy"
   #@cap_config.load :file => "/opt/local/lib/ruby/gems/1.8/gems/capistrano-ext-1.2.1/lib/capistrano/ext/multistage.rb"
   unless @multistage_path
@@ -112,7 +113,7 @@ def new_cap(stage, utopian)
     }
   end
   @cap_config.load :file => @multistage_path
-  @cap_config.find_and_execute_task(stage)
+  @cap_config.find_and_execute_task("#{server}/#{stage}")
   @cap_config.find_and_execute_task("multistage:ensure")
 end
 
@@ -189,7 +190,8 @@ def provision(server, server_config, utopian)
         next
       end
 =end
-      new_cap cap_stage, utopian
+      new_cap server, app, stage, utopian
+
       # deploy
       server_moonshine_folder = "#{app_root}/config/deploy/#{server}"
       stage_moonshine_file = "#{server_moonshine_folder}/#{stage}_moonshine.yml"
@@ -205,12 +207,13 @@ def provision(server, server_config, utopian)
       #@cap_config.set(:shared_config, (@cap_config.fetch(:shared_configs, []) + [ "config/database.yml", "config/database.#{utopian_name}.yml", "config/moonshine.yml" ]).uniq)
       @cap_config.set(:shared_config, (@cap_config.fetch(:shared_configs, []) + [ "config/database.yml", "config/moonshine.yml" ]).uniq)
       if utopian
-        db_file = File.read(File.join(MOONSHINE_MULTISITE_ROOT, "/app/manifests/assets/database_configs/database.#{utopian_name}.yml"))
+        db_file = File.read(File.join(MOONSHINE_MULTISITE_ROOT, "/assets/public/database_configs/database.#{utopian_name}.yml"))
       else
         db_file = File.read(Rails.root.join("/app/manifests/assets/private/database_configs/database.#{utopian_name}.yml"))
       end
       @cap_config.put db_file, "#{@cap_config.fetch(:shared_path)}/config/database.yml"
       @cap_config.put YAML::dump(@cap_config.fetch(:moonshine_config)), "#{@cap_config.fetch(:shared_path)}/config/moonshine.yml"
+      puts "REPO BEFORE DEPLOY IS #{@cap_config.fetch(:repository)}"
       run_cap cap_stage, "deploy"
       run_cap cap_stage, "shared_config:symlink"
 

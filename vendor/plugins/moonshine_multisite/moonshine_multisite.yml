@@ -30,16 +30,16 @@
     :stage_moonshines:
       :pulse:
         :prod: 
-          :db_name: pulse
+          :db_name: emu
           :server_name: pulse.campusforchrist.org
         :dev: 
-          :db_name: moose
-          :server_name: pat.dev.campusforchrist.org
+          :db_name: emu_dev
+          :server_name: pulse.dev.campusforchrist.org
           :application_aliases:
             - moose.campusforchrist.org
         :staging: 
-          :db_name: emu
-          :server_name: pat.staging.powertochange.org
+          :db_name: emu_stage
+          :server_name: pulse.dev.campusforchrist.org
       :intranet:
         :prod:
           :db_name: ciministry
@@ -47,6 +47,10 @@
           :db_name: dev_campusforchrist
         :staging:
           :db_name: dev_campusforchrist
+      :utility:
+        :dev:
+          :db_name: c4c_utility
+          :server_name: utility.local
     :local:
       :moonshine:
         :domain: local
@@ -55,15 +59,26 @@
         :pulse:
           :prod: 
             :db_name: c4c_pulse_prod
-            :server_name: pulse.campusforchrist.org
-          :dev: 
+          :dev:  # only dev is installed in /var/www, the other stages are for db only
+                 # since there is only c4c.dev (no c4c.prod or c4c.staging) in pulse git
             :db_name: c4c_pulse_dev
-            :server_name: pat.dev.local
+            :server_name: pulse.local
             :application_aliases:
               - moose.local
           :staging: 
             :db_name: emu
-            :server_name: pat.staging.powertochange.org
+        :intranet: # for db only
+          :prod:
+            :db_name: c4c_intranet_prod
+          :dev:
+            :db_name: c4c_intranet_dev
+          :staging:
+            :db_name: c4c_intranet_staging
+        :utility:
+          :dev:
+            :db_name: c4c_utility
+            :server_name: utility.local
+            :deploy_to: /var/www/utility.local
   :p2c:
     :moonshine:
       :user: deploy
@@ -105,3 +120,4 @@
   :pat: git://github.com/andrewroth/project_application_tool.git
   :pulse: git://github.com/twinge/ministry-tracker.git
   :intranet: 
+  :utility: git://github.com/andrewroth/c4c_utility.git

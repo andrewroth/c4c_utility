@@ -33,15 +33,14 @@ end
 # Sets the key and values in capistrano from the moonshine multisite config
 # Also sets @moonshine_config as a hash of moonshine values (similar to what
 # would be gotten from a moonshine.yml)
-def apply_moonshine_multisite_config(server, stage)
+def apply_moonshine_multisite_config(server, app, stage)
   server = server.to_sym
   stage = stage.to_sym unless stage.nil?
-  app = fetch(:application).to_sym
 
-  debug "[DBG] apply_moonshine_multisite_config server=#{server} stage=#{stage}"
+  debug "[DBG] apply_moonshine_multisite_config server=#{server} app=#{app} stage=#{stage}"
   return false if multisite_config_hash[:servers][server.to_sym].nil?
   
-  @moonshine_config = {}
+  @moonshine_config = { :application => app }
   @moonshine_config.merge!(traverse_hash(multisite_config_hash, [ :servers, server, :moonshine ]) || {})
   puts "utopian override: #{fetch(:utopian_override, false)}"
   if fetch(:utopian_override, false)
@@ -57,10 +56,12 @@ def apply_moonshine_multisite_config(server, stage)
   @moonshine_config[:stage_only] = stage
 
   # give some defaults
+  puts "REPO IS #{@moonshine_config[:repository]}"
   @moonshine_config[:repository] ||= multisite_config_hash[:apps][app]
   @moonshine_config[:repository] ||= (@moonshine_config[:repository] =~ /^svn/ ? :svn : :git)
   @moonshine_config[:branch] ||= (stage ? "#{server}.#{stage}" : nil)
-  @moonshine_config[:application] ||= fetch(:application)
+  @moonshine_config[:deploy_to] ||= "/var/www/#{app}.#{@moonshine_config[:domain]}"
+  puts "REPO AFTER IS #{@moonshine_config[:repository]}"
 
   # allow overriding from env
   @moonshine_config.each do |key, value|
@@ -146,9 +147,9 @@ end
 # extracts the host and stage and goes to apply_moonshine_multisite_config
 def apply_moonshine_multisite_config_from_cap
   if fetch(:stage).to_s =~ /(.*)\/(.*)/
-    apply_moonshine_multisite_config $1, $2
+    apply_moonshine_multisite_config $1, fetch(:application), $2
   elsif fetch(:stage).to_s =~ /(.+)/
-    apply_moonshine_multisite_config $1, nil
+    apply_moonshine_multisite_config $1, fetch(:application), nil
   end
 end
 
