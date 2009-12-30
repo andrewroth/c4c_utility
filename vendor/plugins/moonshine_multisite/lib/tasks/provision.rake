@@ -190,12 +190,8 @@ def provision(server, server_config, utopian)
 
       # upload certs if possible
       if @cap_config.fetch(:certs).is_a?(Hash)
-        base_dir = @cap_config.fetch(:certs)[:dir]
-        for type in [ :key, :cert ]
-          remote_file = @cap_config.fetch(:certs)[type]
+        @cap_config.fetch(:certs).each do |local_file, remote_file|
           base_name = File.basename(remote_file)
-          local_file = File.join(base_dir, base_name)
-          # upload to tmp first to get around permissions
           tmp_file = "/tmp/#{base_name}"
           @cap_config.upload local_file, tmp_file
           @cap_config.sudo "mv #{tmp_file} #{remote_file}"
