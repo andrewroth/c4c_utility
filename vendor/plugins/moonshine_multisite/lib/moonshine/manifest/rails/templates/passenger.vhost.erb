@@ -1,10 +1,10 @@
 <% if configuration[:ssl] %>
 <VirtualHost *:80>
-  ServerName <%= configuration[:server] %>
+  ServerName <%= configuration[:server_name] %>
 <% if configuration[:server_aliases] %>
   ServerAlias <%= configuration[:server_aliases].to_a.join(' ') %>
 <% end %>
-  Redirect 301 / https://<%= configuration[:server] %>
+  Redirect 301 / https://<%= configuration[:server_name] %>
 </VirtualHost>
 <% end %>
 
@@ -13,7 +13,7 @@
 <% else %>
 <VirtualHost *:80>
 <% end %>
-  ServerName <%= configuration[:server] %>
+  ServerName <%= configuration[:server_name] %>
 <% if configuration[:server_aliases] %>
   ServerAlias <%= configuration[:server_aliases].to_a.join(' ') %>
 <% end %>
