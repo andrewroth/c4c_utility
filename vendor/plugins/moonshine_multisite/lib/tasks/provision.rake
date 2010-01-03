@@ -12,8 +12,8 @@ namespace :provision do
   namespace :this do
     task :dev do
       STDOUT.print "Enter the password for deploy@pat.powertochange.org: "
+      @password = gets.chomp
       STDOUT.print "Enter the password for deploy@localhost: "
-      @password = @cap_config.fetch(:password)
       @p2c_password = gets.chomp
       provision(:c4c, multisite_config_hash[:servers][:c4c], true)
       provision(:p2c, multisite_config_hash[:servers][:p2c], true)
