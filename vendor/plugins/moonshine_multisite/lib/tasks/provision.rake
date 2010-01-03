@@ -9,6 +9,25 @@ end
 require 'ftools'
 
 namespace :provision do
+  namespace :this do
+    task :dev do
+      STDOUT.print "Enter the password for deploy@pat.powertochange.org: "
+      STDOUT.print "Enter the password for deploy@localhost: "
+      @password = @cap_config.fetch(:password)
+      @p2c_password = gets.chomp
+      provision(:c4c, multisite_config_hash[:servers][:c4c], true)
+      provision(:p2c, multisite_config_hash[:servers][:p2c], true)
+      # p2c
+      @cap_config.set(:password, @p2c_password)
+      @cap_config = Capistrano::Configuration.new
+      Capistrano::Configuration.instance = @cap_config
+      @cap_config.logger.level = Capistrano::Logger::TRACE
+      @cap_config.find_and_execute_task "pull:dbs:utopian"
+    end
+    task :server do
+    end
+  end
+
   multisite_config_hash[:servers].each do |server, server_config|
     desc "Provision the #{server} server"
     task server do
@@ -62,6 +81,7 @@ namespace :provision do
 =end
   end
 end
+
 
 # fix rake collisions with capistrano
 undef :symlink
