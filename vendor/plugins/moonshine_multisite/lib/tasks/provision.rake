@@ -10,19 +10,22 @@ require 'ftools'
 
 namespace :provision do
   namespace :this do
+    # *** replace this task with your countries provision method
+    # Canada's method is here as an example
+    desc "provisions this computer"
     task :dev do
-      STDOUT.print "Enter the password for deploy@pat.powertochange.org: "
-      @password = gets.chomp
       STDOUT.print "Enter the password for deploy@localhost: "
-      @p2c_password = gets.chomp
+      @password = STDIN.gets.chomp
+      STDOUT.print "Enter the password for deploy@pat.powertochange.org: "
+      @p2c_password = STDIN.gets.chomp
+      ENV['HOSTS'] = '127.0.0.1'
       provision(:c4c, multisite_config_hash[:servers][:c4c], true)
       provision(:p2c, multisite_config_hash[:servers][:p2c], true)
       # p2c
-      @cap_config.set(:password, @p2c_password)
-      @cap_config = Capistrano::Configuration.new
-      Capistrano::Configuration.instance = @cap_config
-      @cap_config.logger.level = Capistrano::Logger::TRACE
-      @cap_config.find_and_execute_task "pull:dbs:utopian"
+      ENV.delete 'HOSTS'
+      @password = @p2c_password
+      new_cap nil, nil, nil, true
+      run_cap nil, "pull:dbs:utopian"
     end
     task :server do
     end
@@ -129,7 +132,11 @@ def new_cap(server, app, stage, utopian)
     }
   end
   @cap_config.load :file => @multistage_path
-  @cap_config.find_and_execute_task("#{server}/#{stage}")
+  if server && stage
+    @cap_config.find_and_execute_task("#{server}/#{stage}")
+  elsif server
+    @cap_config.find_and_execute_task("#{server}")
+  end
   @cap_config.find_and_execute_task("multistage:ensure")
 end
 
@@ -199,8 +206,6 @@ def provision(server, server_config, utopian)
       end
       @cap_config.put db_file, "#{@cap_config.fetch(:shared_path)}/config/database.yml"
       @cap_config.put YAML::dump(@cap_config.fetch(:moonshine_config)), "#{@cap_config.fetch(:shared_path)}/config/moonshine.yml"
-      puts "REPO BEFORE DEPLOY IS #{@cap_config.fetch(:repository)}"
-      puts "BRANCH BEFORE DEPLOY IS #{@cap_config.fetch(:branch)}"
       run_cap cap_stage, "deploy"
       run_cap cap_stage, "shared_config:symlink"
 
