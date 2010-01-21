@@ -175,14 +175,6 @@ def cap_upload_certs(stage)
 end
 =end
 
-def fetch(*params)
-  @cap_config.fetch(*params)
-end
-
-def run(cmd)
-  @cap_config.run(cmd)
-end
-
 def provision(server, server_config, utopian)
   debug "[DBG] setup #{server} utopian=#{utopian}"
   debug "[DBG] config #{server_config.inspect}"
@@ -244,7 +236,7 @@ def provision(server, server_config, utopian)
 
       run_cap cap_stage, "deploy"
       run_cap cap_stage, "shared_config:symlink"
-      run_remote_rake "git:branches"
+      run_remote_rake "git:branches", @cap_config.current_path, @cap_config
     end
   end
 end
