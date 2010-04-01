@@ -21,6 +21,9 @@ namespace "p2c" do
     clear_sessions "ciministry", "site_session"
     clear_sessions "dev_campusforchrist", "site_session"
     
+    # clear view cache on pat
+    execute_shell "rm /var/www/pat.powertochange.org/current/tmp/cache/views/pat.powertochange.org/main/*"
+
     # rotate logs
     execute_shell "logrotate -f /etc/logrotate.d/railsapps"
   end
