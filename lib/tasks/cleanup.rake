@@ -2,7 +2,8 @@ require "#{File.dirname(__FILE__)}/../../vendor/plugins/moonshine_multisite/lib/
 
 def clear_sessions(db, table = "sessions")
   puts "clearing sessions in #{db}.#{table}"
-  execute_sql "USE #{db}; DELETE FROM #{table};"
+  prepare_for_sql db, true
+  execute_sql "DELETE FROM #{table};"
   #execute_shell "cd /var/www/#{domain}/current && RAILS_ENV=production rake db:sessions:clear"
 end
 
