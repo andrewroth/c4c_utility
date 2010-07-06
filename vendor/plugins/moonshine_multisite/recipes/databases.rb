@@ -159,7 +159,7 @@ namespace :klone do
   multisite_config_hash[:apps].keys.each do |app|
     namespace app do
       multisite_config_hash[:stages].each do |stage|
-        next if stage == @master_stage
+        next if stage == @master_stage || stage == :test
         #utopian = utopian_db_name(fetch(:server_only, 'server'), app, fetch(:stage_only, 'stage'))
         #legacy = legacy_db_name(fetch(:server_only, 'server'), app, fetch(:stage_only, 'stage'))
         namespace stage do

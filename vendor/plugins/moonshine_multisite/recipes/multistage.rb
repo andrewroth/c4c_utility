@@ -1,3 +1,5 @@
+require 'fileutils'
+
 before "multistage:prepare", "multistage:prepare_nested_locations"
 
 namespace :multistage do

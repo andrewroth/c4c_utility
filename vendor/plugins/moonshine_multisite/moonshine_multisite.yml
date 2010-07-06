@@ -5,6 +5,7 @@
 - :prod
 - :staging
 - :dev
+- :test
 
 # legacy_stages are optional - sets up some stages for use without capistrano-ext
 # this is useful if you have a sysadmin who doesn't want to use moonshine
@@ -42,8 +43,9 @@
         "app/manifests/assets/private/certs/campusforchrist.org.cert": "/etc/apache2/certs/campusforchrist.org.cert"
         "app/manifests/assets/private/certs/campusforchrist.org.key": "/etc/apache2/certs/campusforchrist.org.key"
       :ruby: ree187 
-      :utility: /var/www/utility.campusforchrist.org/current
+      :common: /var/www/common.campusforchrist.org/current
       :skip_deploy: false
+      :bridge_to: p2c
     :stage_moonshines:
       :pulse:
         :prod: 
@@ -70,11 +72,10 @@
         :staging:
           :db_name: dev_campusforchrist
           :skip_deploy: true
-      :utility:
+      :common:
         :dev:
           :delayed_job: false
-          :db_name: c4c_utility
-          :server_name: utility.campusforchrist.org
+          :server_name: common.campusforchrist.org
           :skip_pull: true
     :local:
       :moonshine:
@@ -94,7 +95,10 @@
             :db_name: c4c_pulse_dev
             :server_name: pulse.local
           :staging: 
-            :db_name: emu
+            :db_name: c4c_pulse_staging
+            :skip_deploy: true
+          :test: 
+            :db_name: c4c_pulse_test
             :skip_deploy: true
         :intranet: # for db only
           :prod:
@@ -106,12 +110,24 @@
           :staging:
             :db_name: c4c_intranet_staging
             :skip_deploy: true
-        :utility:
+          :test:
+            :db_name: c4c_intranet_test
+            :skip_deploy: true
+        :common:
+          :prod:
+            :db_name: c4c_pulse_prod
+            :skip_deploy: true
           :dev:
-            #:db_name: c4c_utility
+            :db_name: c4c_pulse_dev
             :delayed_job: false
-            :server_name: utility.local
-            :deploy_to: /var/www/utility.local
+            :server_name: common.local
+            :deploy_to: /var/www/common.local
+          :staging:
+            :db_name: c4c_pulse_staging
+            :skip_deploy: true
+          :test:
+            :db_name: c4c_pulse_test
+            :skip_deploy: true
   :p2c:
     :moonshine:
       :user: deploy
@@ -125,7 +141,7 @@
       :private_user: deploy
       :ssl: true
       :ruby: ree187 
-      :utility: /var/www/utility.campusforchrist.org/current
+      :common: /var/www/common.campusforchrist.org/current
       :shared_children:
         - config
         - log
@@ -142,6 +158,7 @@
         "app/manifests/assets/private/certs/powertochange.org.cert": "/etc/apache2/certs/powertochange.org.cert"
         "app/manifests/assets/private/certs/powertochange.org.key": "/etc/apache2/certs/powertochange.org.key"
       :skip_deploy: false
+      :bridge_to: c4c
     :stage_moonshines:
       :pat:
         :prod: 
@@ -167,6 +184,27 @@
           :db_name: mpdtool_dev
           :server_name: mpdtool.staging.powertochange.org
           :skip_deploy: true # there's no staging site for the mpdtool yet
+      :intranet:
+        :prod:
+          :db_name: ciministry
+          :skip_deploy: true
+          :sensitive: true
+        :dev:
+          :db_name: dev_campusforchrist
+          :skip_deploy: true
+        :staging:
+          :db_name: dev_campusforchrist
+          :skip_deploy: true
+      :common:
+        :prod: 
+          :db_name: emu
+          :skip_deploy: true
+        :dev: 
+          :db_name: emu_common
+          :skip_deploy: true
+        :staging: 
+          :db_name: emu_stage
+          :skip_deploy: true
     :local:
       :moonshine:
         :domain: local
@@ -187,6 +225,9 @@
           :prod:
             :db_name: p2c_pat_prod
             :skip_deploy: true
+          :test:
+            :db_name: p2c_pat_test
+            :skip_deploy: true
         :mpdtool:
           :prod:
             :db_name: p2c_mpdtool_prod
@@ -197,6 +238,17 @@
             :deploy_to: /var/www/mpdtool.local
           :staging:
             :db_name: p2c_mpdtool_staging
+            :skip_deploy: true
+        :intranet:
+          :prod:
+            :db_name: c4c_intranet_prod
+            :skip_deploy: true
+            :sensitive: true
+          :dev:
+            :db_name: c4c_intranet_dev
+            :skip_deploy: true
+          :staging:
+            :db_name: c4c_intranet_staging
             :skip_deploy: true
   :mh:
     :moonshine:
@@ -211,7 +263,7 @@
       :private_user: deploy
       :ssl: false
       :ruby: ree187 
-      :utility: /var/www/utility.ministryhacks.com/current
+      :common: /var/www/common.ministryhacks.com/current
       :shared_children:
         - config
         - log
@@ -271,11 +323,11 @@
           :db_name: mh_pulse_staging
           :server_name: pulse.staging.ministryhacks.com
           :delayed_job: true
-#      :utility:
+#      :common:
 #        :dev:
 #          :delayed_job: false
-#          :db_name: c4c_utility
-#          :server_name: utility.ministryhacks.org
+#          :db_name: c4c_common
+#          :server_name: common.ministryhacks.org
 #          :skip_pull: true
     :local:
       :moonshine:
@@ -319,14 +371,82 @@
           :staging:
             :db_name: mh_pulse_staging
             :skip_deploy: true
-#        :utility:
+#        :common:
 #          :dev:
-#            :db_name: c4c_utility
-#            :deploy_to: /var/www/utility.local
+#            :db_name: c4c_common
+#            :deploy_to: /var/www/common.local
 #            :skip_pull: true 
+  :utopian:
+    :local:
+      :stage_moonshines:
+        :pat:
+          :prod:
+            :db_name: utopian_pat_prod
+            :skip_deploy: true
+          :dev: 
+            :db_name: utopian_pat_dev
+            :delayed_job: true
+          :staging:
+            :db_name: utopian_pat_staging
+            :skip_deploy: true
+          :test:
+            :db_name: utopian_pat_test
+            :skip_deploy: true
+        :pulse:
+          :prod:
+            :db_name: utopian_pulse_prod
+            :skip_deploy: true
+          :dev: 
+            :db_name: utopian_pulse_dev
+            :delayed_job: true
+          :staging:
+            :db_name: utopian_pulse_staging
+            :skip_deploy: true
+          :test:
+            :db_name: utopian_pulse_test
+            :skip_deploy: true
+        :common:
+          :prod:
+            :db_name: utopian_common_prod
+            :skip_deploy: true
+          :dev: 
+            :db_name: utopian_common_dev
+            :delayed_job: true
+          :staging:
+            :db_name: utopian_common_staging
+            :skip_deploy: true
+          :test:
+            :db_name: utopian_common_test
+            :skip_deploy: true
+        :intranet:
+          :prod:
+            :db_name: utopian_intranet_prod
+            :skip_deploy: true
+          :dev: 
+            :db_name: utopian_intranet_dev
+            :skip_deploy: true
+          :staging:
+            :db_name: utopian_intranet_staging
+            :skip_deploy: true
+          :test:
+            :db_name: utopian_intranet_test
+            :skip_deploy: true
+        :mpdtool:
+          :prod:
+            :db_name: utopian_mpdtool_prod
+            :skip_deploy: true
+          :dev: 
+            :db_name: utopian_mpdtool_dev
+            :delayed_job: true
+          :staging:
+            :db_name: utopian_mpdtool_staging
+            :skip_deploy: true
+          :test:
+            :db_name: utopian_mpdtool_test
+            :skip_deploy: true
 :apps:
   :pat: git://github.com/andrewroth/project_application_tool.git
   :pulse: git://github.com/twinge/ministry-tracker.git
-  :intranet: 
-  :utility: git://github.com/andrewroth/c4c_utility.git
+  :intranet: git://github.com/andrewroth/c4c_intranet.git
+  :common: git://github.com/andrewroth/mh_common_app.git
   :mpdtool: git://github.com/twinge/mpd_tool.git

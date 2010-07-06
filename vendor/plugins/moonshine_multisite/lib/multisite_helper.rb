@@ -5,15 +5,24 @@ def utopian_db_name(server, app, stage)
   "#{server || 'server'}_#{app || 'app'}_#{stage || 'stage'}"
 end
 
-def local_db_name(server, app, stage)
+def local_db_name(server, app, stage, follow_bridge = false)
   #debug "[DBG] legacy_db_name server=#{server} app=#{app} stage=#{stage}"
   hash_path = [ :servers, server.to_sym, :local, :stage_moonshines, app.to_sym, stage.to_sym, :db_name ]
-  traverse_hash(multisite_config_hash, hash_path)
+  local_db = traverse_hash(multisite_config_hash, hash_path)
+  if follow_bridge && local_db.nil? && server_bridge(server)
+    server = server_bridge(server)
+    local_db = local_db_name(server, app, stage, false)
+  end
+  return local_db
 end
 
 def legacy_db_name(server, app, stage)
   hash_path = [ :servers, server.to_sym, :stage_moonshines, app.to_sym, stage.to_sym, :db_name ]
   traverse_hash(multisite_config_hash, hash_path)
+end
+
+def server_bridge(server)
+  traverse_hash(multisite_config_hash, [ :servers, server.to_sym, :moonshine, :bridge_to ])
 end
 
 def server_has_app(server, app)
@@ -36,11 +45,15 @@ def traverse_hash(hash, hash_path)
   return path_so_far
 end
 
-def multisite_config_hash
+def multisite_config_hash(erb = true)
   return @multisite_config if @multisite_config
   file = "#{File.dirname(__FILE__)}/../moonshine_multisite.yml"
   return {} unless File.exists?(file)
-  @multisite_config = YAML.load(ERB.new(File.read(file)).result)
+  if erb
+    @multisite_config = YAML.load(ERB.new(File.read(file)).result)
+  else
+    @multisite_config = YAML.load(File.read(file))
+  end
 end
 
 # Sets the key and values in capistrano from the moonshine multisite config

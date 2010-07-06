@@ -33,3 +33,5 @@ image_science:
 roo:
 - libxml2
 - libxml2-dev
+git:
+- git-core

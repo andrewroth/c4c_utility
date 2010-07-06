@@ -30,6 +30,18 @@ To download all the database info, run:
       cap c4c pull:dbs:utopian sensitive=true user=deploy
       cap p2c pull:dbs:utopian sensitive=true user=deploy
 
+Before committing anything, first run
+
+      rake git:write
+
+To change to write-enabled git urls.
+
+When you switch to the dev branch, do a
+
+      rake db:setup
+
+To load the schema and run seeds.
+
 |
       end
       task :mh do
@@ -164,10 +176,12 @@ Provisioning your local computer is complete.
 end
 
 
-# fix rake collisions with capistrano
-undef :symlink
-undef :ruby
-undef :install
+def undefine
+  # fix rake collisions with capistrano
+  undef :symlink if defined?(symlink)
+  undef :ruby if defined?(ruby)
+  undef :install if defined?(install)
+end
 
 def run_shell(cmd)
   debug "[SH ] #{cmd}"
@@ -237,6 +251,7 @@ end
 =end
 
 def provision(server, server_config, utopian, apps_filter = nil)
+  undefine
   debug "[DBG] setup #{server} utopian=#{utopian}"
   debug "[DBG] config #{server_config.inspect}"
   tmp_dir = "#{RAILS_ROOT}/tmp"
@@ -278,7 +293,7 @@ def provision(server, server_config, utopian, apps_filter = nil)
       # copy the database file
       if utopian
         #db_file = File.read(File.join(MOONSHINE_MULTISITE_ROOT, "/assets/public/database_configs/database.#{utopian_name}.yml"))
-        db_file = File.read(File.join(RAILS_ROOT, "/vendor/plugins/database_git_proxy/generators/database_git_proxy/templates/database.proxy.yml"))
+        db_file = File.read(File.join(RAILS_ROOT, "config", "database.common.yml"))
       else
         db_file = File.read("app/manifests/assets/private/database_configs/database.#{utopian_name}.yml")
       end

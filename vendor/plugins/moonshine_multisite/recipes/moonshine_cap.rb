@@ -1,3 +1,18 @@
+RAILS_ROOT = "#{File.dirname(__FILE__)}/../../../../" unless defined?(RAILS_ROOT)
+begin
+  require "#{RAILS_ROOT}/vendor/plugins/git_branch_configs/init"
+
+  if defined?(Common) && defined?(Common::DISABLE_MOONSHINE) && Common::DISABLE_MOONSHINE
+    puts "Moonshine disabled."
+    # Note - because other tasks require moonshine tasks, we only disable the
+    # after and before triggers.  For example, the pulling dbs remotely requires
+    # moonshine:confiure task defined.  There is also one after callback before
+    # that remains enabled.
+    moonshine_disabled = true
+  end
+rescue LoadError
+end
+
 # these are required at load time by capistrano, we'll set them later
 set :application, ''
 set :repository, ''
@@ -21,8 +36,10 @@ set :scm, :svn if !! repository =~ /^svn/
 
 # callbacks
 after "multistage:ensure", "moonshine:configure"
-after 'deploy:restart', 'deploy:cleanup'
-before 'moonshine:apply', 'moonshine:upload_moonshine_config'
+unless moonshine_disabled
+  after 'deploy:restart', 'deploy:cleanup'
+  before 'moonshine:apply', 'moonshine:upload_moonshine_config'
+end
 
 namespace :moonshine do
   desc <<-DESC
@@ -91,15 +108,19 @@ namespace :moonshine do
     run "cd #{latest_release} && RAILS_ENV=#{fetch(:rails_env, 'production')} rake --trace environment"
   end
 
-  after 'deploy:finalize_update' do
-    local_config.upload
-    local_config.symlink
-    shared_config.symlink
-    app.symlinks.update
+  unless moonshine_disabled
+    after 'deploy:finalize_update' do
+      local_config.upload
+      local_config.symlink
+      shared_config.symlink
+      app.symlinks.update
+    end
   end
 
-  before 'deploy:symlink' do
-    apply if fetch(:moonshine_apply, true) == true
+  unless moonshine_disabled
+    before 'deploy:symlink' do
+      apply if fetch(:moonshine_apply, true) == true
+    end
   end
 
 end

@@ -16,6 +16,11 @@ module Moonshine::Manifest::Rails::Os
     package "cron", :ensure => :installed
   end
 
+  # We always want git gem.
+  def git_gem
+    gem "git"
+  end
+
   # Create a MOTD to remind those logging in via SSH that things are managed
   # with Moonshine
   def motd

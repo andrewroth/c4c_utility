@@ -6,7 +6,7 @@ def pull_db(app, server, stage, remote_db, local_db)
   run_remote_utility_rake "#{app}:dump:#{server}:#{stage}"
   utopian = utopian_db_name(server, app, stage)
   local_dump_path = "tmp/#{utopian}.sql".gsub(File::SEPARATOR, File::ALT_SEPARATOR || File::SEPARATOR)
-  remote_dump_path = "#{fetch(:utility)}/tmp/#{utopian}.sql"
+  remote_dump_path = "#{fetch(:common)}/tmp/#{utopian}.sql"
   download remote_dump_path+'.gz', local_dump_path+'.gz' 
   gunzip = Kernel.is_windows? ? File.join(File.dirname(__FILE__), '..', 'windows', 'gzip', 'gunzip.exe') : 'gunzip'
   execute_shell "#{gunzip} #{local_dump_path}.gz -f"
@@ -15,7 +15,7 @@ end
 
 # helper task to run rake commands remotely
 def run_remote_utility_rake(rake_cmd)
-  run_remote_rake rake_cmd, fetch(:utility)
+  run_remote_rake rake_cmd, fetch(:common)
 end
 
 # helper task to run rake commands remotely
